@@ -1,0 +1,19 @@
+version: '3'
+services:
+  db:
+    image: "postgres:11.1-alpine"
+    environment:
+      - POSTGRES_USER=kodlak
+    volumes:
+      - pg_volume:/var/lib/postgresql/data
+  web:
+    build: .
+    ports:
+      - "16981:5000"
+    volumes:
+      - ./src:/jorrvaskr/src
+    depends_on:
+      - db
+
+volumes:
+  pg_volume:
