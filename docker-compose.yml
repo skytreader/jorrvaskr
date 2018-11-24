@@ -4,6 +4,7 @@ services:
     image: "postgres:11.1-alpine"
     environment:
       - POSTGRES_USER=kodlak
+      - POSTGRES_DB=jorrvaskr
     volumes:
       - pg_volume:/var/lib/postgresql/data
   web:
@@ -11,7 +12,7 @@ services:
     ports:
       - "16981:5000"
     volumes:
-      - ./src:/jorrvaskr/src
+      - .:/jorrvaskr
     depends_on:
       - db
 
