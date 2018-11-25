@@ -103,6 +103,22 @@ class GameSessionRecord(Base):
         server_default=db.func.current_timestamp()
     )
 
+class Faction(Base):
+
+    __tablename__ = "factions"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False, unique=True)
+    created_at = db.Column(
+        db.DateTime, nullable=False,
+        default=db.func.current_timestamp(),
+        server_default=db.func.current_timestamp()
+    )
+    last_modified = db.Column(
+        db.DateTime, nullable=False,
+        default=db.func.current_timestamp(),
+        server_default=db.func.current_timestamp()
+    )
+
 class FactionTally(Base):
     """
     This records the number of times a certain faction won. We don't record the
@@ -122,8 +138,20 @@ class FactionTally(Base):
     """
 
     __tablename__ = "faction_tallies"
-    id = db.Column(db.Integer, primary_key=True)
     faction_name = db.Column(db.String, nullable=False, unique=True)
+    faction_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            "factions.id", name="factiontally_faction_fk1", ondelete="CASCADE"
+        ), primary_key=True
+    )
+    game_session_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            "game_sessions.id", name="factiontally_gamesession_fk2",
+            ondelete="CASCADE"
+        ), primary_key=True
+    )
     games_won = db.Column(
         db.Integer, nullable=False, default=0, server_default=0
     )
@@ -163,7 +191,7 @@ class WinLog(Base):
             ondelete="CASCADE"
         ), nullable=False
     )
-    # Note that the FactionTally table is denormalized to include boththe
+    # Note that the FactionTally table is denormalized to include both the
     # faction info and its number of wins. Normalizing it even more seems
     # pointless. Not naming this as faction_tally_id because doing so leaks
     # the denormalized abstraction needlessly.
@@ -184,3 +212,28 @@ class WinLog(Base):
         default=db.func.current_timestamp(),
         server_default=db.func.current_timestamp()
     )
+
+class WinWeight(Base):
+
+    __tablename__ = "win_weights"
+    faction_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            "faction_tallies.id", name="winweight_factiontallies_fk3",
+            ondelete="CASCADE"
+        ), primary_key=True
+    )
+    weight = db.Column(
+        db.Float, nullable=False, default=0.0, server_default=0.0
+    )
+    created_at = db.Column(
+        db.DateTime, nullable=False,
+        default=db.func.current_timestamp(),
+        server_default=db.func.current_timestamp()
+    )
+    last_modified = db.Column(
+        db.DateTime, nullable=False,
+        default=db.func.current_timestamp(),
+        server_default=db.func.current_timestamp()
+    )
+
