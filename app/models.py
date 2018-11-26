@@ -1,6 +1,7 @@
 from app import db
 from sqlalchemy import column
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
@@ -63,6 +64,8 @@ class GameSession(Base):
         server_default=db.func.current_timestamp()
     )
 
+    game_type = relationship("GameType")
+
 class GameSessionRecord(Base):
 
     __tablename__ = "game_session_records"
@@ -102,6 +105,9 @@ class GameSessionRecord(Base):
         default=db.func.current_timestamp(),
         server_default=db.func.current_timestamp()
     )
+
+    game_session = relationship("GameSession")
+    player = relationship("Player")
 
 class Faction(Base):
 
@@ -166,6 +172,9 @@ class FactionTally(Base):
         server_default=db.func.current_timestamp()
     )
 
+    faction = relationship("Faction")
+    game_session = relationship("GameSession")
+
 class WinLog(Base):
     """
     A slightly more detailed record of wins. One win for one player is one, and
@@ -213,6 +222,10 @@ class WinLog(Base):
         server_default=db.func.current_timestamp()
     )
 
+    player = relationship("Player")
+    game_session = relationship("GameSession")
+    faction = relationship("Faction")
+
 class WinWeight(Base):
 
     __tablename__ = "win_weights"
@@ -237,3 +250,4 @@ class WinWeight(Base):
         server_default=db.func.current_timestamp()
     )
 
+    faction = relationship("Faction")
