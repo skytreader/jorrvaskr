@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
-class GameType(Base):
+class GameType(db.Model):
 
     __tablename__ = "game_types"
     id = db.Column(db.Integer, primary_key=True)
@@ -21,7 +21,7 @@ class GameType(Base):
         server_default=db.func.current_timestamp()
     )
 
-class Player(Base):
+class Player(db.Model):
 
     __tablename__ = "players"
     id = db.Column(db.Integer, primary_key=True)
@@ -37,7 +37,7 @@ class Player(Base):
         server_default=db.func.current_timestamp()
     )
 
-class GameSession(Base):
+class GameSession(db.Model):
     """
     One game session is one time people agree to play werewolf. In one game
     session, there may be multiple games of werewolf, each possibly with a
@@ -66,7 +66,7 @@ class GameSession(Base):
 
     game_type = relationship("GameType")
 
-class GameSessionRecord(Base):
+class GameSessionRecord(db.Model):
 
     __tablename__ = "game_session_records"
     __table_args__ = (
@@ -109,7 +109,7 @@ class GameSessionRecord(Base):
     game_session = relationship("GameSession")
     player = relationship("Player")
 
-class Faction(Base):
+class Faction(db.Model):
 
     __tablename__ = "factions"
     id = db.Column(db.Integer, primary_key=True)
@@ -125,7 +125,7 @@ class Faction(Base):
         server_default=db.func.current_timestamp()
     )
 
-class FactionTally(Base):
+class FactionTally(db.Model):
     """
     This records the number of times a certain faction won. We don't record the
     number of times a certain faction was included in a game because in general,
@@ -175,7 +175,7 @@ class FactionTally(Base):
     faction = relationship("Faction")
     game_session = relationship("GameSession")
 
-class WinLog(Base):
+class WinLog(db.Model):
     """
     A slightly more detailed record of wins. One win for one player is one, and
     only one, row in this table. In addition to that, this will also record the
@@ -226,7 +226,7 @@ class WinLog(Base):
     game_session = relationship("GameSession")
     faction = relationship("Faction")
 
-class WinWeight(Base):
+class WinWeight(db.Model):
 
     __tablename__ = "win_weights"
     faction_id = db.Column(

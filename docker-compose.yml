@@ -3,6 +3,7 @@ services:
   db:
     image: "postgres:11.1-alpine"
     environment:
+      - POSTGRES_USER=postgres
       - POSTGRES_DB=jorrvaskr
     volumes:
       - pg_volume:/var/lib/postgresql/data
