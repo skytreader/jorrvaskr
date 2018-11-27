@@ -1,0 +1,1 @@
+Contains tentative/draft image assets used in the main application.
