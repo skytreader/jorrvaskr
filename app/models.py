@@ -1,4 +1,4 @@
-from app import db
+from . import db
 from sqlalchemy import column
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -73,7 +73,7 @@ class GameSessionRecord(db.Model):
         db.CheckConstraint(
             column("games_played") >= column("games_won"),
             name="gamesplayed_geq_gameswon_ck"
-        )
+        ),
     )
     game_session_id = db.Column(
         db.Integer,
@@ -90,10 +90,10 @@ class GameSessionRecord(db.Model):
         ), nullable=False, primary_key=True
     )
     games_played = db.Column(
-        db.Integer, nullable=False, default=0, server_default=0,
+        db.Integer, nullable=False, default=0, server_default="0",
     )
     games_won = db.Column(
-        db.Integer, nullable=False, default=0, server_default=0
+        db.Integer, nullable=False, default=0, server_default="0"
     )
     created_at = db.Column(
         db.DateTime, nullable=False,
@@ -144,7 +144,7 @@ class FactionTally(db.Model):
     """
 
     __tablename__ = "faction_tallies"
-    faction_name = db.Column(db.String, nullable=False, unique=True)
+    id = db.Column(db.Integer, primary_key=True)
     faction_id = db.Column(
         db.Integer,
         db.ForeignKey(
@@ -159,7 +159,7 @@ class FactionTally(db.Model):
         ), primary_key=True
     )
     games_won = db.Column(
-        db.Integer, nullable=False, default=0, server_default=0
+        db.Integer, nullable=False, default=0, server_default="0"
     )
     created_at = db.Column(
         db.DateTime, nullable=False,
@@ -200,14 +200,10 @@ class WinLog(db.Model):
             ondelete="CASCADE"
         ), nullable=False
     )
-    # Note that the FactionTally table is denormalized to include both the
-    # faction info and its number of wins. Normalizing it even more seems
-    # pointless. Not naming this as faction_tally_id because doing so leaks
-    # the denormalized abstraction needlessly.
     faction_id = db.Column(
         db.Integer,
         db.ForeignKey(
-            "faction_tallies.id", name="winlog_factiontallies_fk3",
+            "factions.id", name="winlog_factions_fk3",
             ondelete="CASCADE"
         ), nullable=False
     )
@@ -232,12 +228,12 @@ class WinWeight(db.Model):
     faction_id = db.Column(
         db.Integer,
         db.ForeignKey(
-            "faction_tallies.id", name="winweight_factiontallies_fk3",
+            "factions.id", name="winweight_factions_fk3",
             ondelete="CASCADE"
         ), primary_key=True
     )
     weight = db.Column(
-        db.Float, nullable=False, default=0.0, server_default=0.0
+        db.Float, nullable=False, default=0.0, server_default="0.0"
     )
     created_at = db.Column(
         db.DateTime, nullable=False,
