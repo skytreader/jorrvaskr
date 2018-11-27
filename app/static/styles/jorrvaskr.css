@@ -3,3 +3,45 @@ body {
     color: #debcbc;
     font-family: sans-serif;
 }
+
+.logo-container {
+    width: 13%;
+    float: left;
+}
+
+.app-header {
+    width: 100%;
+}
+
+.toolbar {
+    float: left;
+    width: 70%;
+    padding-top: 28px;
+}
+
+.data-section {
+    padding: 14px 28px;
+    margin-top: 12px;
+    border: 1px solid #eaeaea;
+    border-radius: 3px;
+    clear: left;
+    height: 80vh;
+}
+
+.btn-primary, .btn-secondary {
+    border-radius: 5px;
+    padding: 13px 18px;
+}
+
+.btn-primary {
+    background: #333;
+    border-color: #de9962;
+    color: #ddd;
+    font-weight: bold;
+}
+
+.btn-secondary {
+    background: #eaeaea;
+    border-color: #eaeaea;
+    color: #333;
+}

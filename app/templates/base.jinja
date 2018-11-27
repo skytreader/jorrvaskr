@@ -6,7 +6,15 @@
         <script type="text/javascript" src="/static/scripts/jorrvaskr.js"></script>
     </head>
     <body>
-        <img src="/static/images/base_dominican.png">
+        <div class="app-header">
+            <div class="logo-container">
+                <img src="/static/images/base_dominican.png">
+            </div>
+            <div class="toolbar">
+                <button class="btn-primary">Start Session</button>
+                <button class="btn-secondary">View Records</button>
+            </div>
+        </div>
         {% block content %}{% endblock %}
     </body>
 </html
