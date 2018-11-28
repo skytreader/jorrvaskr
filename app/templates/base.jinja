@@ -11,8 +11,16 @@
                 <img src="/static/images/base_dominican.png">
             </div>
             <div class="toolbar">
-                <button class="btn-primary">Start Session</button>
-                <button class="btn-secondary">View Records</button>
+                <div class="section date-entry">
+                    <div>Enter date of session</div>
+                    <div>
+                        <input type="date">
+                    </div>
+                </div>
+                <div class="section">
+                    <a class="btn-primary" href="/session/new">Start Session</a>
+                    <a class="btn-secondary" href="/records/view">View Records</a>
+                </div>
             </div>
         </div>
         {% block content %}{% endblock %}

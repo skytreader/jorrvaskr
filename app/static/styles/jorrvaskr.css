@@ -16,7 +16,16 @@ body {
 .toolbar {
     float: left;
     width: 70%;
-    padding-top: 28px;
+    padding-top: 42px;
+}
+
+.toolbar .section {
+    float: left;
+    min-width: 12%;
+}
+
+.toolbar .date-entry{
+    margin-top: -13px;
 }
 
 .data-section {
@@ -25,17 +34,18 @@ body {
     border: 1px solid #eaeaea;
     border-radius: 3px;
     clear: left;
-    height: 80vh;
+    min-height: 80vh;
 }
 
 .btn-primary, .btn-secondary {
     border-radius: 5px;
     padding: 13px 18px;
+    text-decoration: none;
 }
 
 .btn-primary {
     background: #333;
-    border-color: #de9962;
+    border: 1px solid #de9962;
     color: #ddd;
     font-weight: bold;
 }
