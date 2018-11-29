@@ -5,7 +5,7 @@
         <link rel="stylesheet" type="text/css" href="/static/styles/jorrvaskr.css">
         <script type="text/javascript" src="/static/scripts/jorrvaskr.js"></script>
     </head>
-    <body>
+    <body onload="baseOnLoad()">
         <div class="app-header">
             <div class="logo-container">
                 <img src="/static/images/base_dominican.png">
@@ -14,7 +14,7 @@
                 <div class="section date-entry">
                     <div>Enter date of session</div>
                     <div>
-                        <input type="date">
+                        <input type="date" id="jorrvaskr-session-start-date">
                     </div>
                 </div>
                 <div class="section">
