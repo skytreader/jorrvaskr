@@ -9,7 +9,7 @@ app = None
 def make_app(config):
     global db, app
     app = Flask(__name__)
-    app.config.from_object("config.Config")
+    app.config.from_object(config)
 
     db = SQLAlchemy(app)
     

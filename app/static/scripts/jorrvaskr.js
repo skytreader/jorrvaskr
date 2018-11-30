@@ -13,7 +13,6 @@ PageController.prototype.autosetSessionStart = function(){
 }
 
 PageController.prototype.onLoad = function(){
-    console.log("this is the onload function of the basic script.");
     pc.autosetSessionStart();
 }
 
