@@ -9,7 +9,8 @@ def index():
 
 @bp.route("/session/new", methods=("POST",))
 def session_start():
-    app.logger.debug(request.form)
     return render_template(
-        "session-new.jinja", session_date=request.form["session-start-date"]
+        "session-new.jinja",
+        session_date=request.form["session-start-date"],
+        scripts=("session-new.js",)
     )

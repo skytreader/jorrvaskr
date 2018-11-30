@@ -4,7 +4,15 @@
   <head>
     <title>Jorrvaskr - {% block title %}{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="/static/styles/jorrvaskr.css">
+    {% for style in styles: %}
+      <link rel="stylesheet" type="text/css" href="/static/styles/{{ style }}">
+    {% endfor %}
+
     <script type="text/javascript" src="/static/scripts/jorrvaskr.js"></script>
+    {% for script in scripts: %}
+      <script type="text/javascript" src="/static/scripts/{{ script }}"></script>
+    {% endfor %}
+
   </head>
   <body onload="pc.onLoad()">
     <div class="app-header">
