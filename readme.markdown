@@ -15,6 +15,13 @@ database. So do (after `docker-compose up`),
 
     docker-compose exec web python /jorrvaskr/fixtures.py
 
+## Compatibility
+
+Use with Google Chrome in Ubuntu. Firefox should work, if with some styling
+issues.
+
+If you are unhappy about the state of compatibility, go make a PR. :P
+
 ## License
 
 GNU GPLv3
