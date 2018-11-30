@@ -9,6 +9,10 @@ body {
     flex: auto;
 }
 
+.logo-container a {
+    border: none;
+}
+
 .app-header {
     width: 100%;
 }
@@ -19,13 +23,13 @@ body {
     padding-top: 42px;
 }
 
-.toolbar .section {
+.toolbar form .section {
     float: left;
     min-width: 12%;
+    margin-top: -13px;
 }
 
-.toolbar .date-entry{
-    margin-top: -13px;
+.toolbar form .date-entry{
     margin-right: 4px;
 }
 

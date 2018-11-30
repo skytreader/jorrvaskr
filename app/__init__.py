@@ -4,9 +4,10 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 
 db = None
+app = None
 
 def make_app(config):
-    global db
+    global db, app
     app = Flask(__name__)
     app.config.from_object("config.Config")
 

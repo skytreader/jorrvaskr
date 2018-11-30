@@ -1,28 +1,47 @@
+{# vim: set ts=2: #}
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Jorrvaskr - {% block title %}{% endblock %}</title>
-        <link rel="stylesheet" type="text/css" href="/static/styles/jorrvaskr.css">
-        <script type="text/javascript" src="/static/scripts/jorrvaskr.js"></script>
-    </head>
-    <body onload="pc.onLoad()">
-        <div class="app-header">
-            <div class="logo-container">
-                <img src="/static/images/base_dominican.png">
-            </div>
-            <div class="toolbar">
-                <div class="section date-entry">
-                    <div>Enter date of session</div>
-                    <div>
-                        <input type="date" id="jorrvaskr-session-start-date">
-                    </div>
-                </div>
-                <div class="section">
-                    <a class="btn-primary" href="/session/new">Start Session</a>
-                    <a class="btn-secondary" href="/records/view">View Records</a>
-                </div>
-            </div>
-        </div>
-        {% block content %}{% endblock %}
-    </body>
+  <head>
+    <title>Jorrvaskr - {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="/static/styles/jorrvaskr.css">
+    <script type="text/javascript" src="/static/scripts/jorrvaskr.js"></script>
+  </head>
+  <body onload="pc.onLoad()">
+    <div class="app-header">
+      <div class="logo-container">
+        <a href="/">
+          <img src="/static/images/base_dominican.png">
+        </a>
+      </div>
+      <div class="toolbar">
+        <form action="/session/new" method="post">
+          <div class="section date-entry">
+
+            {% if session_date %}
+              <div><strong>Session ongoing!</strong></div>
+              <div>
+                <input type="date" id="jorrvaskr-session-start-date" value="{{ session_date }}" disabled>
+              </div>
+            {% else %}
+              <div>Enter date of session</div>
+              <div>
+                <input type="date" id="jorrvaskr-session-start-date" name="session-start-date">
+              </div>
+            {% endif %}
+
+          </div>
+          <div class="section">
+            
+            {% if session_date %}
+              <input type="submit" class="btn-primary" value="Start Session" disabled>
+            {% else %}
+              <input type="submit" class="btn-primary" value="Start Session">
+            {% endif %}
+            <a class="btn-secondary" href="/records/view">View Records</a>
+          </div>
+        </form>
+      </div>
+    </div>
+    {% block content %}{% endblock %}
+  </body>
 </html

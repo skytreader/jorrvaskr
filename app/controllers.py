@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template
+from app import app
+from flask import Blueprint, render_template, request
 
 bp = Blueprint("jorrvaskr", __name__)
 
@@ -6,6 +7,9 @@ bp = Blueprint("jorrvaskr", __name__)
 def index():
     return render_template("index.jinja")
 
-@bp.route("/session/new/", methods=("GET",))
+@bp.route("/session/new", methods=("POST",))
 def session_start():
-    return render_template("session-new.jinja")
+    app.logger.debug(request.form)
+    return render_template(
+        "session-new.jinja", session_date=request.form["session-start-date"]
+    )
