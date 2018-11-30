@@ -19,7 +19,7 @@
           <input type="text" id="jorrvaskr-player-name" name="player-name">
         </label>
       </div>
-      <div class="add-button">+</div>
+      <div class="add-button" onclick="pc.addPlayer()">+</div>
     </div>
     <hr>
     <div class="session-form-section">
@@ -30,7 +30,8 @@
         Too much blood? <button class="btn btn-bloody" onclick="pc.stopGame()">STOP!</button>
       </div>
       <h3>Players</h3>
-      <div id=
+      <div id="player-listing">
+      </div>
     </div>
   </div>
 {% endblock %}
