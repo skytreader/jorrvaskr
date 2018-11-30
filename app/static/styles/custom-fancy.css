@@ -1,0 +1,12 @@
+.add-button {
+    border: 1px solid #de9962;
+    color: #de9962;
+    padding: 3px;
+    border-radius: 50%;
+    height: 14px;
+    width: 14px;
+    float: left;
+    text-align: center;
+    line-height: 1;
+    cursor: pointer;
+}

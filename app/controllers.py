@@ -12,5 +12,6 @@ def session_start():
     return render_template(
         "session-new.jinja",
         session_date=request.form["session-start-date"],
-        scripts=("session-new.js",)
+        scripts=("session-new.js",),
+        styles=("custom-fancy.css", "session-new.css")
     )

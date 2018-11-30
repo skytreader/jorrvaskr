@@ -3,5 +3,26 @@
 {% block title %}New Session{% endblock %}
 {% block content %}
   <div class="data-section">
+    <div class="session-form-section">
+      <strong>Choose Game Type:</strong>
+      <label>
+        <input type="radio" name="game-type" value="Ultimate" checked> Ultimate
+      </label>
+      <label>
+        <input type="radio" name="game-type" value="One Night"> One Night
+      </label>
+    </div>
+    <div class="session-form-section">
+      <div class="add-player">
+        <label>
+          <strong>Add Player:</strong>
+          <input type="text" id="jorrvaskr-player-name" name="player-name">
+        </label>
+      </div>
+      <div class="add-button">+</div>
+    </div>
+    <div class="session-form-section">
+      <h3>Start Game</h3>
+    </div>
   </div>
 {% endblock %}

@@ -1,0 +1,12 @@
+div.add-player {
+    float: left;
+    margin-right: 3px;
+}
+
+.session-form-section {
+    margin-bottom: 6px;
+    width: 100%;
+    float: none;
+    clear: both;
+    display: table;
+}
