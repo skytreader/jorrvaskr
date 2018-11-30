@@ -70,7 +70,7 @@ body {
 
 .btn-bloody {
     background: #d91f1f;
-    border-color: #eaeaea;
     color: #debcbc;
     font-weight: bold;
+    border: none;
 }
