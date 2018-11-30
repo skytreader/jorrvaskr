@@ -42,10 +42,11 @@ body {
     min-height: 80vh;
 }
 
-.btn-primary, .btn-secondary {
+.btn {
     border-radius: 5px;
     padding: 13px 18px;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .btn-primary {
@@ -55,8 +56,21 @@ body {
     font-weight: bold;
 }
 
+.btn-primary:disabled {
+    background: #6e6e6e;
+    cursor: not-allowed;
+    border: none;
+}
+
 .btn-secondary {
     background: #eaeaea;
     border-color: #eaeaea;
     color: #333;
+}
+
+.btn-bloody {
+    background: #d91f1f;
+    border-color: #eaeaea;
+    color: #debcbc;
+    font-weight: bold;
 }

@@ -21,8 +21,16 @@
       </div>
       <div class="add-button">+</div>
     </div>
+    <hr>
     <div class="session-form-section">
-      <h3>Start Game</h3>
+      <div id="jorrvaskr-start-prompt">
+        Are you ready? <button class="btn btn-primary" onclick="ps.startGame()">START!</button>
+      </div>
+      <div id="jorrvaskr-stop-prompt">
+        Too much blood? <a class="btn btn-bloody" onclick="ps.stopGame()">STOP!</a>
+      </div>
+      <h3>Players</h3>
+      <div id=
     </div>
   </div>
 {% endblock %}
