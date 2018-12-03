@@ -1,5 +1,5 @@
-from app import app
-from models import Faction
+from app import app, db
+from .models import Faction
 from flask import Blueprint, render_template, request
 
 bp = Blueprint("jorrvaskr", __name__)
@@ -10,7 +10,7 @@ def index():
 
 @bp.route("/session/new", methods=("POST",))
 def session_start():
-    factions = app.db.session.query(Faction).all()
+    factions = db.session.query(Faction).all()
     return render_template(
         "session-new.jinja",
         session_date=request.form["session-start-date"],
