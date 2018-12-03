@@ -16,7 +16,7 @@
       <div class="add-player">
         <label>
           <strong>Add Player:</strong>
-          <input type="text" id="jorrvaskr-player-name" name="player-name">
+          <input type="text" id="jorrvaskr-player-name" name="player-name" onkeyup="pc.playerEnterWatcher(event)">
         </label>
       </div>
       <div class="add-button" onclick="pc.addPlayer()">+</div>
@@ -29,8 +29,26 @@
       <div id="jorrvaskr-stop-prompt" style="display: none">
         Too much blood? <button class="btn btn-bloody" onclick="pc.stopGame()">STOP!</button>
       </div>
-      <h3>Players</h3>
-      <div id="player-listing">
+      <div id="player-list-screen">
+        <h3>Players</h3>
+        <div id="player-listing">
+        </div>
+      </div>
+      <div id="in-game-screen" style="display: none">
+        <h3>Choose which players won...</h3>
+        <div id="in-game-listing">
+        </div>
+        <h3>...from faction</h3>
+        <div id="faction-listing">
+          {% for faction in factions %}
+            <div>
+              <label>
+                <input type="radio" name="won-faction" value="{{ faction.id }}">
+                {{ faction.name }}
+              </label>
+            </div>
+          {% endfor %}
+        </div>
       </div>
     </div>
   </div>
