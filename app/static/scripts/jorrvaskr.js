@@ -11,6 +11,13 @@ function padDateField(v){
     return sv.length != 2 ? "0" + sv : sv;
 }
 
+function hideElements(promptIds){
+    var limit = promptIds.length;
+    for (var i = 0; i < limit; i++){
+        gid(promptIds[i]).style.display = "none";
+    }
+}
+
 function PageController(){
 }
 

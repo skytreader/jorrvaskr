@@ -51,19 +51,17 @@ pc.addPlayer = function(){
 }
 
 pc.startGame = function(){
-    var startPrompt = gid("jorrvaskr-start-prompt");
-    startPrompt.style.display = "none";
+    hideElements(["jorrvaskr-start-prompt", "jorrvaskr-endgame-prompt"]);
     var stopPrompt = gid("jorrvaskr-stop-prompt");
     stopPrompt.style.display = "block";
+    gid("player-list-screen").style.display = "block";
 }
 
 pc.stopGame = function(){
-    var stopPrompt = gid("jorrvaskr-stop-prompt");
-    stopPrompt.style.display = "none";
-    var startPrompt = gid("jorrvaskr-start-prompt");
-    startPrompt.style.display = "block";
-
-    gid("player-list-screen").style.display = "none";
+    hideElements([
+        "jorrvaskr-start-prompt", "jorrvaskr-stop-prompt", "player-list-screen"
+    ]);
+    gid("jorrvaskr-endgame-prompt").style.display = "block";
     gid("in-game-screen").style.display = "block";
 
     var inGameList = gid("in-game-listing");
@@ -73,6 +71,16 @@ pc.stopGame = function(){
     for (var i = 0; i < limit; i++){
         inGameList.appendChild(createPlayerNode(gamePlayers[i]));
     }
+}
+
+pc.playAgain = function(){
+    hideElements([
+        "jorrvaskr-stop-prompt", "jorrvaskr-endgame-prompt", "in-game-screen"
+    ]);
+    gid("jorrvaskr-start-prompt").style.display = "block";
+    gid("player-list-screen").style.display = "block";
+
+    // TODO send win record to server.
 }
 
 pc.getPlayersInGame = function(){
