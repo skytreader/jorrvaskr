@@ -2,6 +2,10 @@ function gid(s){
     return document.getElementById(s);
 }
 
+function docQuery(q){
+    return document.querySelector(q);
+}
+
 function newNode(type){
     return document.createElement(type);
 }
