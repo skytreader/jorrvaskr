@@ -41,6 +41,8 @@ def new_game_records():
         db.session.add(game_session)
         db.session.flush()
 
+    game_session.games_played += 1
+
     # Record factions
     faction = get_or_create(Faction, name=faction)
     faction_tally = get_or_create(
