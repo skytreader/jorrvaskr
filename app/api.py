@@ -1,6 +1,9 @@
 from flask import Blueprint, request
 from app import app, db
-from app.models import get_or_create, GameSession, Player
+from app.models import (
+    get_or_create, Faction, FactionTally, GameSession, GameSessionRecord,
+    Player, WinLog
+)
 
 from datetime import datetime, timedelta
 
@@ -9,15 +12,21 @@ bp = Blueprint("api", __name__)
 @bp.route("/game_record/new", methods=("POST",))
 def new_game_records():
     app.logger.info("the form %s" % request.form)
-    players = request.form["players"]
-    for p in players:
-        get_or_create(Player, name=p)
 
-    game_type = int(request.form["game-type"])
+    # Retrieve data from the form and assemble them in the proper data type
+    # FIXME Cleanup! This is what Flask forms are for!
+    players = request.form.getlist("players")
+    winners = set(request.form.getlist("winners"))
     session_date = datetime.fromisoformat(request.form["session-date"])
-    date_query_limit = session_date + timedelta(days=1)
+    game_type = int(request.form["game-type"])
+    faction = request.form["faction"]
+
+    player_map = {}
+    for p in players:
+        player_map[p] = get_or_create(Player, name=p)
     
     # Find a GameSession, if it exists
+    date_query_limit = session_date + timedelta(days=1)
     game_session = (
         db.session.query(GameSession)
         .filter(session_date <= GameSession.created_at)
@@ -33,4 +42,34 @@ def new_game_records():
         )
         db.session.add(game_session)
         db.session.flush()
+
+    # Record factions
+    faction = get_or_create(Faction, name=faction)
+    faction_tally = get_or_create(
+        FactionTally, faction_id=faction.id, game_session_id=game_session.id
+    )
+    faction_tally.games_won += 1
+
+    # Record player wins/plays
+    player_game_session_records = {}
+
+    for p in players:
+        player_game_session_records[p] = get_or_create(
+            GameSessionRecord,
+            player=player_map[p],
+            game_session=game_session
+        )
+        player_game_session_records[p].games_played += 1
+
+        if p in winners:
+            player_game_session_records[p].games_won += 1
+            db.session.add(
+                WinLog(
+                    player=player_map[p],
+                    game_session=game_session,
+                    faction=faction
+                )
+            )
+
+    db.session.commit()
     return "OK"

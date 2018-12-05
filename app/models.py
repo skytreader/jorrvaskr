@@ -159,7 +159,6 @@ class FactionTally(db.Model):
     """
 
     __tablename__ = "faction_tallies"
-    id = db.Column(db.Integer, primary_key=True)
     faction_id = db.Column(
         db.Integer,
         db.ForeignKey(

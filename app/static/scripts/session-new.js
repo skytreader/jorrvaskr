@@ -115,9 +115,11 @@ pc.playAgain = function(){
     var winningPlayers = [];
     var inGamePlayersListing = gid("player-listing");
     var gamePlayersCount = inGamePlayersListing.children.length;
+    var gamePlayers = [];
 
     for (var i = 0; i < gamePlayersCount; i++){
         var inputNode = extractInputNode(inGamePlayersListing.children[i]);
+        gamePlayers.push(inputNode.value);
         if (inputNode.checked){
             winningPlayers.push(inputNode.value);
         }
@@ -127,8 +129,11 @@ pc.playAgain = function(){
     var winningPlayersLimit = winningPlayers.length;
 
     // construct players
+    for (var i = 0; i < gamePlayersCount; i++){
+        queryStringComponents.push("players=" + encodeURIComponent(gamePlayers[i]));
+    }
     for (var i = 0; i < winningPlayersLimit; i++){
-        queryStringComponents.push("players=" + encodeURIComponent(winningPlayers[i]));
+        queryStringComponents.push("winners=" + encodeURIComponent(winningPlayers[i]));
     }
     queryStringComponents.push(
         "session-date=" + encodeURIComponent(gid("jorrvaskr-session-start-date").value)
@@ -136,12 +141,16 @@ pc.playAgain = function(){
     queryStringComponents.push(
         "game-type=" + encodeURIComponent(docQuery("input[name='game-type']:checked").value)
     );
+    queryStringComponents.push(
+        "faction=" + encodeURIComponent(docQuery("input[name='won-faction']:checked").value)
+    );
 
     // TODO send win record to server.
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/game_record/new", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.send(queryStringComponents.join("&"));
+    clearChildren(gid("in-game-listing"));
 }
 
 pc.getPlayersInGame = function(){

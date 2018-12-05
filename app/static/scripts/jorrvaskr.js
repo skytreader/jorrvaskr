@@ -10,6 +10,12 @@ function newNode(type){
     return document.createElement(type);
 }
 
+function clearChildren(node){
+    while(node.lastChild){
+        node.removeChild(node.lastChild);
+    }
+}
+
 function padDateField(v){
     var sv = "" + v;
     return sv.length != 2 ? "0" + sv : sv;
