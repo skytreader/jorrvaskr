@@ -24,6 +24,7 @@ def new_game_records():
     game_session = (
         db.session.query(GameSession)
         .filter(session_date <= GameSession.created_at)
+        .filter(GameSession.game_type_id == game_type)
         .filter(GameSession.created_at < date_query_limit)
         .first()
     )
