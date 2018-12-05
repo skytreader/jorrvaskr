@@ -21,6 +21,7 @@ def index():
                 db.session.query(Faction.name, func.sum(FactionTally.games_won))
                 .filter(FactionTally.game_session_id.in_(games))
                 .filter(Faction.id == FactionTally.faction_id)
+                .group_by(Faction.name)
                 .all()
             )
         else:

@@ -18,10 +18,6 @@ def new_game_records():
     session_date = datetime.fromisoformat(request.form["session-date"])
     game_type = int(request.form["game-type"])
     faction = request.form["faction"]
-
-    player_map = {}
-    for p in players:
-        player_map[p] = get_or_create(Player, name=p)
     
     # Find a GameSession, if it exists
     date_query_limit = session_date + timedelta(days=1)
@@ -39,7 +35,11 @@ def new_game_records():
             game_type_id=game_type, created_at=session_date
         )
         db.session.add(game_session)
-        db.session.flush()
+        db.session.commit()
+
+    player_map = {}
+    for p in players:
+        player_map[p] = get_or_create(Player, name=p)
 
     game_session.games_played += 1
 
