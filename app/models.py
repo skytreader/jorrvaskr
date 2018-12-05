@@ -68,6 +68,9 @@ class GameSession(db.Model):
         ),
         nullable=False
     )
+    games_played = db.Column(
+        db.Integer, nullable=False, default=0, server_default="0"
+    )
     created_at = db.Column(
         db.DateTime, nullable=False,
         default=db.func.current_timestamp(),
