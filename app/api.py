@@ -11,8 +11,6 @@ bp = Blueprint("api", __name__)
 
 @bp.route("/game_record/new", methods=("POST",))
 def new_game_records():
-    app.logger.info("the form %s" % request.form)
-
     # Retrieve data from the form and assemble them in the proper data type
     # FIXME Cleanup! This is what Flask forms are for!
     players = request.form.getlist("players")

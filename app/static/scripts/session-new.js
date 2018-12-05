@@ -113,7 +113,7 @@ pc.playAgain = function(){
     gid("player-list-screen").style.display = "block";
 
     var winningPlayers = [];
-    var inGamePlayersListing = gid("player-listing");
+    var inGamePlayersListing = gid("in-game-listing");
     var gamePlayersCount = inGamePlayersListing.children.length;
     var gamePlayers = [];
 
