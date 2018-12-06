@@ -30,7 +30,7 @@ function createFactionNode(factionName){
     var inputRadio = newNode("input");
     inputRadio.type = "radio";
     inputRadio.name = "won-faction";
-    inputRadio.value = "-1";
+    inputRadio.value = factionName;
 
     enclosingLabel.appendChild(inputRadio);
     inputRadio.insertAdjacentText("afterend", " " + factionName);
