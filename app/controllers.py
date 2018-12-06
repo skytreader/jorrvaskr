@@ -50,3 +50,7 @@ def session_start():
         styles=("custom-fancy.css", "session-new.css"),
         factions=factions
     )
+
+@bp.route("/records/view")
+def records_view():
+    return render_template("records-view.jinja")
