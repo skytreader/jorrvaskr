@@ -2,13 +2,30 @@ function gid(s){
     return document.getElementById(s);
 }
 
+function docQuery(q){
+    return document.querySelector(q);
+}
+
 function newNode(type){
     return document.createElement(type);
+}
+
+function clearChildren(node){
+    while(node.lastChild){
+        node.removeChild(node.lastChild);
+    }
 }
 
 function padDateField(v){
     var sv = "" + v;
     return sv.length != 2 ? "0" + sv : sv;
+}
+
+function hideElements(promptIds){
+    var limit = promptIds.length;
+    for (var i = 0; i < limit; i++){
+        gid(promptIds[i]).style.display = "none";
+    }
 }
 
 function PageController(){

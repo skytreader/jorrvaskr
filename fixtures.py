@@ -5,7 +5,7 @@ def insert_fixtures(session):
     session.add(GameType(label="One Night"))
     session.add(GameType(label="Ultimate"))
     session.add(Faction(name="Werewolves"))
-    session.add(Faction(name="Villages"))
+    session.add(Faction(name="Villagers"))
     session.add(Faction(name="Tanner"))
     session.add(Faction(name="Lovers"))
     session.commit()

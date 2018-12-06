@@ -2,10 +2,6 @@ MIN_PLAYERS_REQUIRED = 5;
 pc.players = new Set();
 
 pc.onLoad = function(){
-    var playerNameField = gid("jorrvaskr-player-name");
-    playerNameField.addEventListener("keypress", (ev) => {
-        // TODO Capture ENTER key
-    });
 }
 
 function createPlayerNode(playerName){
@@ -28,6 +24,41 @@ function createPlayerNode(playerName){
     return playerNode;
 }
 
+function createFactionNode(factionName){
+    var holdingDiv = newNode("div");
+    var enclosingLabel = newNode("label");
+    var inputRadio = newNode("input");
+    inputRadio.type = "radio";
+    inputRadio.name = "won-faction";
+    inputRadio.value = factionName;
+
+    enclosingLabel.appendChild(inputRadio);
+    inputRadio.insertAdjacentText("afterend", " " + factionName);
+    holdingDiv.appendChild(enclosingLabel);
+
+    return holdingDiv;
+}
+
+/**
+Taking an HTML node as returned by createPlayerNode above, return the input node
+element which will tell us both the name associated to this node (in the value)
+and whether this player is included in this game (with the checked attribute).
+*/
+function extractInputNode(playerNode){
+    var labelNode = playerNode.children[0];
+    var chkBoxInput = labelNode.children[0];
+    return chkBoxInput;
+}
+
+pc.onLoad = function(){
+    
+}
+
+pc.playerEnterWatcher = function(ev){
+    if (ev.key === "Enter"){
+        this.addPlayer();
+    }
+}
 pc.enableStartGame = function(){
     var readyPrompt = gid("ready-prompt");
     readyPrompt.innerHTML = "Are you ready?"
@@ -59,15 +90,103 @@ pc.addPlayer = function(){
 }
 
 pc.startGame = function(){
-    var startPrompt = gid("jorrvaskr-start-prompt");
-    startPrompt.style.display = "none";
+    hideElements(["jorrvaskr-start-prompt", "jorrvaskr-endgame-prompt"]);
     var stopPrompt = gid("jorrvaskr-stop-prompt");
     stopPrompt.style.display = "block";
+    gid("player-list-screen").style.display = "block";
 }
 
 pc.stopGame = function(){
-    var stopPrompt = gid("jorrvaskr-stop-prompt");
-    stopPrompt.style.display = "none";
-    var startPrompt = gid("jorrvaskr-start-prompt");
-    startPrompt.style.display = "block";
+    hideElements([
+        "jorrvaskr-start-prompt", "jorrvaskr-stop-prompt", "player-list-screen"
+    ]);
+    gid("jorrvaskr-endgame-prompt").style.display = "block";
+    gid("in-game-screen").style.display = "block";
+
+    var inGameList = gid("in-game-listing");
+    var gamePlayers = this.getPlayersInGame();
+    var limit = gamePlayers.length;
+
+    for (var i = 0; i < limit; i++){
+        inGameList.appendChild(createPlayerNode(gamePlayers[i]));
+    }
+}
+
+pc.addFaction = function(){
+    // TODO Ensure that the faction is new indeed!
+    var newFactionName = gid("jorrvaskr-new-faction").value.trim();
+
+    if (newFactionName.length > 0){
+        gid("faction-listing").appendChild(createFactionNode(newFactionName));
+    }
+}
+
+pc.playAgain = function(){
+    // Validation first
+    var wonFaction = docQuery("input[name='won-faction']:checked");
+    if (wonFaction == null){
+        gid("in-game-prompts").innerHTML = "Please choose which faction won";
+        return;
+    } else{
+        gid("in-game-prompts").innerHTML = "";
+    }
+    hideElements([
+        "jorrvaskr-stop-prompt", "jorrvaskr-endgame-prompt", "in-game-screen"
+    ]);
+    gid("jorrvaskr-start-prompt").style.display = "block";
+    gid("player-list-screen").style.display = "block";
+
+    var winningPlayers = [];
+    var inGamePlayersListing = gid("in-game-listing");
+    var gamePlayersCount = inGamePlayersListing.children.length;
+    var gamePlayers = [];
+
+    for (var i = 0; i < gamePlayersCount; i++){
+        var inputNode = extractInputNode(inGamePlayersListing.children[i]);
+        gamePlayers.push(inputNode.value);
+        if (inputNode.checked){
+            winningPlayers.push(inputNode.value);
+        }
+    }
+
+    var queryStringComponents = [];
+    var winningPlayersLimit = winningPlayers.length;
+
+    // construct players
+    for (var i = 0; i < gamePlayersCount; i++){
+        queryStringComponents.push("players=" + encodeURIComponent(gamePlayers[i]));
+    }
+    for (var i = 0; i < winningPlayersLimit; i++){
+        queryStringComponents.push("winners=" + encodeURIComponent(winningPlayers[i]));
+    }
+    queryStringComponents.push(
+        "session-date=" + encodeURIComponent(gid("jorrvaskr-session-start-date").value)
+    );
+    queryStringComponents.push(
+        "game-type=" + encodeURIComponent(docQuery("input[name='game-type']:checked").value)
+    );
+    queryStringComponents.push(
+        "faction=" + encodeURIComponent(docQuery("input[name='won-faction']:checked").value)
+    );
+
+    // TODO send win record to server.
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/game_record/new", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send(queryStringComponents.join("&"));
+    clearChildren(gid("in-game-listing"));
+}
+
+pc.getPlayersInGame = function(){
+    var playersInGame = [];
+    var playerListing = gid("player-listing");
+    var limit = playerListing.children.length;
+    for (var i = 0; i < limit; i++){
+        var inputNode = extractInputNode(playerListing.children[i]);
+        if (inputNode.checked){
+            playersInGame.push(inputNode.value);
+        }
+    }
+
+    return playersInGame;
 }

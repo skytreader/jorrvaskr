@@ -8,5 +8,5 @@ div.add-player {
     width: 100%;
     float: none;
     clear: both;
-    display: table;
+    display: inline-block;
 }

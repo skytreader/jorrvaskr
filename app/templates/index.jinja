@@ -1,7 +1,22 @@
+{# vim: set ts=2: #}
 {% extends "base.jinja" %}
 {% block title %}Home{% endblock %}
 {% block content %}
 <div class="data-section">
-    <h2>No game session ongoing.</h2>
+  <h2>Some quick stats:</h2>
+  {% for game_type in faction_records: %}
+    <h3>{{ game_type }}</h3>
+    {% if faction_records[game_type]: %}
+      <strong>Total played: </strong>{{ total_games_played[game_type] }}
+      <table>
+        <tr><th>Faction</th><th>Games Won</th></tr>
+        {% for record in faction_records[game_type]: %}
+        <tr><td>{{ record[0] }}</td><td>{{ record[1] }}</td></tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <h4>No games yet :(. Go play some!</h4>
+    {% endif %}
+  {% endfor %}
 </div>
 {% endblock %}

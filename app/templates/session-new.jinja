@@ -6,17 +6,17 @@
     <div class="session-form-section">
       <strong>Choose Game Type:</strong>
       <label>
-        <input type="radio" name="game-type" value="Ultimate" checked> Ultimate
+        <input type="radio" name="game-type" value="2" checked> Ultimate
       </label>
       <label>
-        <input type="radio" name="game-type" value="One Night"> One Night
+        <input type="radio" name="game-type" value="1"> One Night
       </label>
     </div>
     <div class="session-form-section">
       <div class="add-player">
         <label>
           <strong>Add Player:</strong>
-          <input type="text" id="jorrvaskr-player-name" name="player-name">
+          <input type="text" id="jorrvaskr-player-name" name="player-name" onkeyup="pc.playerEnterWatcher(event)">
         </label>
       </div>
       <div class="add-button" id="add-button" onclick="pc.addPlayer()">+</div>
@@ -30,10 +30,38 @@
       <div id="jorrvaskr-stop-prompt" style="display: none">
         Too much blood? <button class="btn btn-bloody" onclick="pc.stopGame()">STOP!</button>
       </div>
-      <h3>Players</h3>
-      <p>Tick the players who will be joining this game.</p>
-      <div id="player-listing">
-        No players yet.
+      <div id="jorrvaskr-endgame-prompt" style="display: none">
+        Choosing winners... <button class="btn btn-primary" onclick="pc.playAgain()">One more games!</button>
+      </div>
+      <div id="player-list-screen">
+        <h3>Players</h3>
+        <p>Tick the players who will be joining this game.</p>
+        <div id="player-listing">
+          No players yet.
+        </div>
+      </div>
+      <div id="in-game-screen" style="display: none">
+        <h3>Choose which players won...</h3>
+        <p id="in-game-prompts"></p>
+        <div id="in-game-listing">
+        </div>
+        <h3>...from faction</h3>
+        <div class="session-form-section">
+          <div style="float: left">
+            <input type="text" placeholder="New Faction" id="jorrvaskr-new-faction">
+          </div>
+          <div class="add-button" onclick="pc.addFaction()">+</div>
+        </div>
+        <div id="faction-listing">
+          {% for faction in factions %}
+            <div>
+              <label>
+                <input type="radio" name="won-faction" value="{{ faction.name }}">
+                {{ faction.name }}
+              </label>
+            </div>
+          {% endfor %}
+        </div>
       </div>
     </div>
   </div>

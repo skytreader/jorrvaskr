@@ -5,6 +5,21 @@ from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
+def get_or_create(model, session=None, will_commit=False, **kwargs):
+    session = session if session else db.session
+    instance = session.query(model).filter_by(**kwargs).first()
+    if instance:
+        return instance
+    else:
+        instance = model(**kwargs)
+        session.add(instance)
+
+        if will_commit:
+            session.commit()
+        else:
+            session.flush()
+        return instance
+
 class GameType(db.Model):
 
     __tablename__ = "game_types"
@@ -52,6 +67,9 @@ class GameSession(db.Model):
             "game_types.id", name="gamesession_gametype_fk1", ondelete="CASCADE"
         ),
         nullable=False
+    )
+    games_played = db.Column(
+        db.Integer, nullable=False, default=0, server_default="0"
     )
     created_at = db.Column(
         db.DateTime, nullable=False,
@@ -144,7 +162,6 @@ class FactionTally(db.Model):
     """
 
     __tablename__ = "faction_tallies"
-    id = db.Column(db.Integer, primary_key=True)
     faction_id = db.Column(
         db.Integer,
         db.ForeignKey(

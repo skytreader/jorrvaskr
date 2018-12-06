@@ -20,7 +20,9 @@ def make_app(config):
     db.create_all()
     db.session.commit()
 
-    from .controllers import bp
-    app.register_blueprint(bp)
+    from .controllers import bp as controllers_bp
+    from .api import bp as api_bp
+    app.register_blueprint(controllers_bp)
+    app.register_blueprint(api_bp)
     
     return app
