@@ -43,6 +43,7 @@ def new_game_records():
         player_map[p] = get_or_create(Player, name=p)
 
     game_session.games_played += 1
+    game_session.last_modified = datetime.now()
 
     # Record factions
     faction = get_or_create(Faction, name=faction)
@@ -50,6 +51,7 @@ def new_game_records():
         FactionTally, faction_id=faction.id, game_session_id=game_session.id
     )
     faction_tally.games_won += 1
+    faction_tally.last_modified = datetime.now()
 
     # Record player wins/plays
     player_game_session_records = {}
@@ -61,9 +63,11 @@ def new_game_records():
             game_session=game_session
         )
         player_game_session_records[p].games_played += 1
+        player_game_session_records[p].last_modified = datetime.now()
 
         if p in winners:
             player_game_session_records[p].games_won += 1
+            player_game_session_records[p].last_modified = datetime.now()
             db.session.add(
                 WinLog(
                     player=player_map[p],
