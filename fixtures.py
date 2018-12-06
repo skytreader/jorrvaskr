@@ -1,9 +1,13 @@
 import app
 
 def insert_fixtures(session):
-    from app.models import GameType
+    from app.models import Faction, GameType
     session.add(GameType(label="One Night"))
     session.add(GameType(label="Ultimate"))
+    session.add(Faction(name="Werewolves"))
+    session.add(Faction(name="Villages"))
+    session.add(Faction(name="Tanner"))
+    session.add(Faction(name="Lovers"))
     session.commit()
 
 if __name__ == "__main__":
