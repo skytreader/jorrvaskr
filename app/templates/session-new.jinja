@@ -19,18 +19,21 @@
           <input type="text" id="jorrvaskr-player-name" name="player-name">
         </label>
       </div>
-      <div class="add-button" onclick="pc.addPlayer()">+</div>
+      <div class="add-button" id="add-button" onclick="pc.addPlayer()">+</div>
     </div>
     <hr>
     <div class="session-form-section">
       <div id="jorrvaskr-start-prompt">
-        Are you ready? <button class="btn btn-primary" onclick="pc.startGame()">START!</button>
+        <span id="ready-prompt">You need at least 5 players to start a game.</span>
+        <button class="btn btn-primary" onclick="pc.startGame()" id="start-game" disabled>START!</button>
       </div>
       <div id="jorrvaskr-stop-prompt" style="display: none">
         Too much blood? <button class="btn btn-bloody" onclick="pc.stopGame()">STOP!</button>
       </div>
       <h3>Players</h3>
+      <p>Tick the players who will be joining this game.</p>
       <div id="player-listing">
+        No players yet.
       </div>
     </div>
   </div>
