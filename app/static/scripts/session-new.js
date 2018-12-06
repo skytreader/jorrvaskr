@@ -1,3 +1,9 @@
+MIN_PLAYERS_REQUIRED = 5;
+pc.players = new Set();
+
+pc.onLoad = function(){
+}
+
 function createPlayerNode(playerName){
     var playerNode = newNode("div");
     var labelNode = newNode("label");
@@ -53,15 +59,33 @@ pc.playerEnterWatcher = function(ev){
         this.addPlayer();
     }
 }
+pc.enableStartGame = function(){
+    var readyPrompt = gid("ready-prompt");
+    readyPrompt.innerHTML = "Are you ready?"
+    var btnStartGame = gid("start-game");
+
+    if (btnStartGame.hasAttribute("disabled")){
+        btnStartGame.toggleAttribute("disabled");
+    }
+}
 
 pc.addPlayer = function(){
     var playerNameField = gid("jorrvaskr-player-name");
     var playerName = playerNameField.value.trim();
 
-    if (playerName != ""){
+    if (playerName != "" && !this.players.has(playerName)){
         var playerListing = gid("player-listing");
+        if (playerListing.childElementCount == 0){
+            // This is the first player added; delete the null message.
+            playerListing.innerHTML = "";
+        }
         playerListing.appendChild(createPlayerNode(playerName));
+        this.players.add(playerName);
         playerNameField.value = "";
+    }
+
+    if (playerListing.childElementCount >= MIN_PLAYERS_REQUIRED){
+        this.enableStartGame();
     }
 }
 
