@@ -11,7 +11,7 @@
       <table>
         <tr><th>Faction</th><th>Games Won</th></tr>
         {% for record in faction_records[game_type]: %}
-        <tr><td>{{ record[0] }}</td><td>{{ record[1] }}</td></tr>
+          <tr><td>{{ record[0] }}</td><td>{{ record[1] }}</td></tr>
         {% endfor %}
       </table>
     {% else %}

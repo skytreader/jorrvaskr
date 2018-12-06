@@ -1,5 +1,7 @@
 from app import app, db
-from app.models import Faction, FactionTally, GameSession, GameType
+from app.models import (
+    Faction, FactionTally, GameSession, GameSessionRecord, GameType, Player
+)
 from flask import Blueprint, render_template, request
 from sqlalchemy.sql import func
 
@@ -53,4 +55,18 @@ def session_start():
 
 @bp.route("/records/view")
 def records_view():
-    return render_template("records-view.jinja")
+    game_types = db.session.query(GameType).all()
+    records_per_type = {}
+    for gt in game_types:
+        records_per_type[gt.label] = (
+            db.session.query(
+                Player.name,
+                func.sum(GameSessionRecord.games_played),
+                func.sum(GameSessionRecord.games_won)
+            ).filter(GameSession.id == GameSessionRecord.game_session_id)
+            .filter(GameSession.game_type_id == gt.id)
+            .filter(GameSessionRecord.player_id == Player.id)
+            .group_by(Player.name)
+            .all()
+        )
+    return render_template("records-view.jinja", records=records_per_type)
