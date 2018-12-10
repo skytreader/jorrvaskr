@@ -3,6 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 
 import os
 
+__PATCH__ = 0
+__MINOR__ = 1
+__MAJOR__ = 0
+__EXT__ = ""
+__VERSION__ = "%d.%d.%d%s" % (__MAJOR__, __MINOR__, __PATCH__, __EXT__)
+
 db = None
 app = None
 
