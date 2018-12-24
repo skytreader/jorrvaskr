@@ -1,0 +1,17 @@
+version: '3'
+services:
+  db:
+    image: "postgres:11.1-alpine"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=jorrvaskr
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile-test
+    ports:
+      - "16981:5000"
+    volumes:
+      - .:/jorrvaskr
+    depends_on:
+      - db

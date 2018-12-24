@@ -1,0 +1,6 @@
+# vim: set ft=dockerfile:
+FROM jorrvaskr:current
+
+COPY requirements-test.txt ./
+RUN pip install -r requirements-test.txt
+ENTRYPOINT pytest
