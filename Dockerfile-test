@@ -3,4 +3,5 @@ FROM jorrvaskr:current
 
 COPY requirements-test.txt ./
 RUN pip install -r requirements-test.txt
-ENTRYPOINT pytest
+CMD ["pytest", "/jorrvaskr"]
+ENTRYPOINT /usr/bin/env
