@@ -3,5 +3,5 @@ FROM jorrvaskr:current
 
 COPY requirements-test.txt ./
 RUN pip install -r requirements-test.txt
-CMD ["pytest", "/jorrvaskr"]
-ENTRYPOINT /usr/bin/env
+CMD ["pytest", "-v", "/jorrvaskr"]
+ENTRYPOINT ["/usr/bin/env"]
