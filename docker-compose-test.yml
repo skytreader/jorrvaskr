@@ -5,6 +5,11 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_DB=jorrvaskr
+    healthcheck:
+      test: su postgres -c 'psql -c "select 1"'
+      interval: 1m
+      timeout: 12s
+      retries: 4
   web:
     build:
       context: ./

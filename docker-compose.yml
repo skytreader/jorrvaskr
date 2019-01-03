@@ -7,6 +7,11 @@ services:
       - POSTGRES_DB=jorrvaskr
     volumes:
       - pg_volume:/var/lib/postgresql/data
+    healthcheck:
+      test: su postgres -c 'psql -c "select 1"'
+      interval: 1m
+      timeout: 12s
+      retries: 4
   web:
     build: .
     ports:
