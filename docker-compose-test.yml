@@ -1,4 +1,4 @@
-version: '3'
+version: '2.1'
 services:
   db:
     image: "postgres:11.1-alpine"
@@ -14,10 +14,10 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile-test
-    restart: on-failure
     ports:
       - "16981:5000"
     volumes:
       - .:/jorrvaskr
     depends_on:
-      - db
+      db:
+        condition: service_healthy
