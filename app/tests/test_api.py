@@ -1,6 +1,6 @@
 from .base import AppTestCase
 from app import db
-from app.models import GameSession
+from app.models import GameSession, GameType
 from datetime import datetime
 from freezegun import freeze_time
 
@@ -15,8 +15,30 @@ class ApiTests(AppTestCase):
 
     def test_game_session_dne(self):
         game_sessions = (
-            db.session.query(GameSession)
+            self.db.session.query(GameSession)
             .filter(self.freeze_time <= GameSession.created_at)
             .first()
         )
         self.assertTrue(game_sessions is None)
+        one_night_game = (
+            self.db.session.query(GameType)
+            .filter(GameType.label=="One Night")
+            .first()
+        )
+        self.assertTrue(one_night_game is not None)
+        rv = self.client.post("/game_record/new",
+            data={
+                "players": ["chad", "je", "shara", "franz", "gelo"],
+                "winners": ["chad"],
+                "session-date": datetime.now().isoformat(),
+                "game-type": one_night_game.id,
+                "faction": "tanner"
+            }
+        )
+        self.assertEquals(200, rv._status_code)
+        game_sessions = (
+            self.db.session.query(GameSession)
+            .filter(self.freeze_time <= GameSession.created_at)
+            .first()
+        )
+        self.assertTrue(game_sessions is not None)

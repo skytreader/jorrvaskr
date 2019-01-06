@@ -11,20 +11,19 @@ App.app = App.make_app("config.Config")
 class AppTestCase(TestCase):
 
     def create_app(self):
-        app = App.make_app(os.environ.get("JORRVASKR_CONFIG", "config.Config"))
-        app.config["TESTING"] = True
-        return app
+        return App.app
 
     def setUp(self):
         from app.models import GameType, Faction
         self.app = self.create_app()
-        App.db.session.add(GameType(label="One Night"))
-        App.db.session.add(GameType(label="Ultimate"))
-        App.db.session.add(Faction(name="Werewolves"))
-        App.db.session.add(Faction(name="Villagers"))
-        App.db.session.add(Faction(name="Tanner"))
-        App.db.session.add(Faction(name="Lovers"))
-        App.db.session.flush()
+        self.db = App.db
+        self.db.session.add(GameType(label="One Night"))
+        self.db.session.add(GameType(label="Ultimate"))
+        self.db.session.add(Faction(name="Werewolves"))
+        self.db.session.add(Faction(name="Villagers"))
+        self.db.session.add(Faction(name="Tanner"))
+        self.db.session.add(Faction(name="Lovers"))
+        self.db.session.flush()
 
     def __delete_table(self, tbl_name):
         # WARNING: Prone to injections. But we are deleting anyway and this is
