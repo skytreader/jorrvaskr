@@ -6,8 +6,7 @@ import os
 # Here only for all the other initialization stuff which might expect an
 # initialized app to be present. In any case, a new app should be created per
 # test case.
-# FIXME This looks ripe for problems!
-App.make_app("config.Config")
+App.app = App.make_app("config.Config")
 
 class AppTestCase(TestCase):
 

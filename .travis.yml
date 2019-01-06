@@ -9,4 +9,4 @@ before_script:
     - docker build -t jorrvaskr:current .
     - docker-compose -f docker-compose-test.yml build
 script:
-    - sudo docker-compose -f docker-compose-test.yml run web
+    - docker-compose -f docker-compose-test.yml run web

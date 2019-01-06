@@ -8,9 +8,10 @@ if __name__ == "__main__":
     exp_backoff = 0
     while True:
         try:
-            _app = app.make_app(os.environ.get("JORRVASKR_CONFIG", "config.Config"))
-            _app.run(host=os.environ.get("JORRVASKR_HOST", "0.0.0.0"))
+            app.app = app.make_app(os.environ.get("JORRVASKR_CONFIG", "config.Config"))
+            app.app.run(host=os.environ.get("JORRVASKR_HOST", "0.0.0.0"))
         except (KeyboardInterrupt, SystemExit, socket.error):
+            print("Caught terminal signal")
             raise
         except Exception as e:
             traceback.print_exc()

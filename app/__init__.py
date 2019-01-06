@@ -13,10 +13,20 @@ db = None
 app = None
 
 def make_app(config):
-    global db, app
     app = Flask(__name__)
     app.config.from_object(config)
 
+    init_db(app)
+
+    from .controllers import bp as controllers_bp
+    from .api import bp as api_bp
+    app.register_blueprint(controllers_bp)
+    app.register_blueprint(api_bp)
+    
+    return app
+
+def init_db(app):
+    global db
     db = SQLAlchemy(app)
     
     from .models import (
@@ -25,10 +35,4 @@ def make_app(config):
     )
     db.create_all()
     db.session.commit()
-
-    from .controllers import bp as controllers_bp
-    from .api import bp as api_bp
-    app.register_blueprint(controllers_bp)
-    app.register_blueprint(api_bp)
-    
-    return app
+    return db
