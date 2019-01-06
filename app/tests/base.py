@@ -16,7 +16,15 @@ class AppTestCase(TestCase):
         return app
 
     def setUp(self):
+        from app.models import GameType, Faction
         self.app = self.create_app()
+        App.db.session.add(GameType(label="One Night"))
+        App.db.session.add(GameType(label="Ultimate"))
+        App.db.session.add(Faction(name="Werewolves"))
+        App.db.session.add(Faction(name="Villagers"))
+        App.db.session.add(Faction(name="Tanner"))
+        App.db.session.add(Faction(name="Lovers"))
+        App.db.session.flush()
 
     def __delete_table(self, tbl_name):
         # WARNING: Prone to injections. But we are deleting anyway and this is
