@@ -31,6 +31,15 @@ You may now run the tests like so:
 
 More info can be found in `.travis.yml`.
 
+## Note
+
+In an attempt to make `docker-compose.yml` and `docker-compose-test.yml` as
+similar as possible, the images used by the services declared use the same
+context. The slight difference between the main web image and the test web image
+means that you need to build with `docker-compose` everytime you either want to
+spin up the web app or run the unit tests. Not yet sure if there is a better way
+to handle this.
+
 ## Compatibility
 
 Use with Google Chrome in Ubuntu. Firefox should work, if with some styling
