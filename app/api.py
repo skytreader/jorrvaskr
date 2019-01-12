@@ -36,7 +36,7 @@ def new_game_records():
             game_type_id=game_type, created_at=session_date
         )
         db.session.add(game_session)
-        db.session.commit()
+        db.session.flush()
 
     player_map = {}
     for p in players:

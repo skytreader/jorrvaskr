@@ -1,5 +1,6 @@
 from .base import AppTestCase
 from app import db
+from app import api
 from app.models import GameSession, GameType
 from datetime import datetime
 from freezegun import freeze_time
@@ -35,10 +36,39 @@ class ApiTests(AppTestCase):
                 "faction": "tanner"
             }
         )
-        self.assertEquals(200, rv._status_code)
+        self.assertEqual(200, rv._status_code)
         game_sessions = (
             self.db.session.query(GameSession)
             .filter(self.freeze_time <= GameSession.created_at)
             .first()
         )
         self.assertTrue(game_sessions is not None)
+
+    def test_game_session_exists(self):
+        one_night_game = (
+            self.db.session.query(GameType)
+            .filter(GameType.label=="One Night")
+            .first()
+        )
+        gs = GameSession(game_type=one_night_game, created_at=self.freeze_time)
+        self.db.session.add(gs)
+        self.db.session.flush()
+        with self.app.test_request_context("/game_record/new",
+            data={
+                "players": ["chad", "je", "shara", "franz", "gelo"],
+                "winners": ["chad"],
+                "session-date": datetime.now().isoformat(),
+                "game-type": one_night_game.id,
+                "faction": "tanner"
+            }
+        ):
+            return_value = api.new_game_records()
+            self.assertEqual("OK", return_value)
+            game_sessions = (
+                self.db.session.query(GameSession)
+                .filter(GameSession.game_type_id == one_night_game.id)
+                .filter(self.freeze_time <= GameSession.created_at)
+                .all()
+            )
+            self.assertEqual(1, len(game_sessions))
+            self.assertEqual(game_sessions[0].id, gs.id)
