@@ -3,7 +3,11 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 <div class="data-section">
-  <h2>Some quick stats:</h2>
+  {% if faction_records: %}
+    <h2>Some quick stats:</h2>
+  {% else: %}
+    <h2>No games yet :(. Go play some!</h2>
+  {% endif %}
   {% for game_type in faction_records: %}
     <h3>{{ game_type }}</h3>
     {% if faction_records[game_type]: %}

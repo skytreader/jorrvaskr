@@ -72,8 +72,12 @@ pc.enableStartGame = function(){
 pc.addPlayer = function(){
     var playerNameField = gid("jorrvaskr-player-name");
     var playerName = playerNameField.value.trim();
+    var isPlayerNameBlank = playerName == "";
+    var isPlayerAlreadyIn = this.players.has(playerName);
+    var addPlayerMessages = gid("add-player-messages");
 
-    if (playerName != "" && !this.players.has(playerName)){
+    if (!isPlayerNameBlank && !isPlayerAlreadyIn){
+        addPlayerMessages.innerHTML = "";
         var playerListing = gid("player-listing");
         if (playerListing.childElementCount == 0){
             // This is the first player added; delete the null message.
@@ -82,11 +86,17 @@ pc.addPlayer = function(){
         playerListing.appendChild(createPlayerNode(playerName));
         this.players.add(playerName);
         playerNameField.value = "";
+        if (playerListing.childElementCount >= MIN_PLAYERS_REQUIRED){
+            this.enableStartGame();
+        }
+    } else{
+        if (isPlayerNameBlank){
+            addPlayerMessages.innerHTML = "Players can't have blank names.";
+        } else if (isPlayerAlreadyIn){
+            addPlayerMessages.innerHTML = "Player already in the list.";
+        }
     }
 
-    if (playerListing.childElementCount >= MIN_PLAYERS_REQUIRED){
-        this.enableStartGame();
-    }
 }
 
 pc.startGame = function(){
