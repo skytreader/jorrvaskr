@@ -6,7 +6,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_DB=jorrvaskr
     volumes:
-      - pg_volume:/var/lib/postgresql/data
+      - pg_volume_test:/var/lib/postgresql/data
     healthcheck:
       test: su postgres -c 'psql -c "select 1"'
       interval: 1m
@@ -25,4 +25,4 @@ services:
         condition: service_healthy
 
 volumes:
-  pg_test_volume:
+  pg_volume_test:
