@@ -28,6 +28,13 @@ function hideElements(promptIds){
     }
 }
 
+function showElements(promptIds){
+    var limit = promptIds.length;
+    for (var i = 0; i < limit; i++){
+        gid(promptIds[i]).style.display = "block";
+    }
+}
+
 function PageController(){
 }
 
