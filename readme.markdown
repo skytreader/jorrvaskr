@@ -15,6 +15,12 @@ database. So do (after `docker-compose up`),
 
     docker-compose exec web python /jorrvaskr/fixtures.py
 
+## Dumping the database contents
+
+Is as simple as
+
+    docker-compose exec db su postgres -c "pg_dump jorrvaskr" > jorrvaskr.sql
+
 ## Testing
 
 Build the main image (if you haven't already):
