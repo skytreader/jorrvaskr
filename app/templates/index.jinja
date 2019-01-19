@@ -7,6 +7,19 @@
     <h2>Some quick stats:</h2>
   {% else: %}
     <h2>No games yet :(. Go play some!</h2>
+    <div class="message warning-message">
+      <div class="warning-indicator">
+      </div>
+      <div class="message-body">
+        <p>Uh-oh. If you are seeing this, your administrator probably forgot to
+        load some seed data into this installation, or forgot to import your
+        previous games. Either way, you should let your administrator know
+        immediately.</p>
+
+        <p>But if you know what you're doing, there is no need to be alarmed,
+        really. Go play some Werewolf!</p>
+      </div>
+    </div>
   {% endif %}
   {% for game_type in faction_records: %}
     <h3>{{ game_type }}</h3>

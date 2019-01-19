@@ -74,3 +74,30 @@ body {
     font-weight: bold;
     border: none;
 }
+
+.message {
+    border: 1px solid;
+    border-radius: 5px;
+    width: 100%;
+    min-height: 100px;
+    overflow: hidden;
+}
+
+.warning-message {
+    border-color: #eddf43;
+}
+
+.message .warning-indicator {
+    background-color: #eddf43;
+    width: 40px;
+    height: 100%;
+    min-height: 100px;
+    float: left;
+}
+
+.message .message-body {
+    min-height: 100px;
+    width: 90%;
+    padding: 20px;
+    float: left;
+}
