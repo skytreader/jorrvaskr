@@ -81,23 +81,22 @@ body {
     width: 100%;
     min-height: 100px;
     overflow: hidden;
+    display: flex;
 }
 
 .warning-message {
     border-color: #eddf43;
 }
 
+.message .indicator {
+    flex: 1;
+}
+
 .message .warning-indicator {
     background-color: #eddf43;
-    width: 40px;
-    height: 100%;
-    min-height: 100px;
-    float: left;
 }
 
 .message .message-body {
-    min-height: 100px;
-    width: 90%;
+    flex: 100;
     padding: 20px;
-    float: left;
 }
