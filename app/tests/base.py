@@ -30,9 +30,26 @@ class AppTestCase(TestCase):
         # just for tests, never for prod.
         App.db.engine.execute("DELETE FROM %s;" % tbl_name)
 
+    def verify_does_not_exist(self, model, **kwargs):
+        """
+        Verify that the record described by **kwargs is not yet in the table
+        represented by the given model.
+        """
+        record = self.db.session.query(model).filter_by(**kwargs).first()
+        self.assertTrue(record is None)
+
+    def verify_exists(self, model, **kwargs):
+        """
+        Inverse of verify_does_not_exist.
+        """
+        record = self.db.session.query(model).filter_by(**kwargs).first()
+        self.assertFalse(record is None)
+
     def tearDown(self):
         App.db.session.rollback()
         # FIXME This will complain about foreign keys.
+        # TODO It might suffice to just close the session here. The next test
+        # will be on its own session anyway.
         self.__delete_table("game_types")
         self.__delete_table("players")
         self.__delete_table("game_sessions")
