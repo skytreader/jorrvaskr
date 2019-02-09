@@ -91,14 +91,18 @@ class ApiTests(AppTestCase):
         gs = GameSession(game_type=one_night_game, created_at=self.freeze_time)
 
         existing_players = ["chad", "je"]
+        winners = set(["chad"])
+        win_play_ratios = [(8, 8), (5, 8)]
         new_players = ["shara", "franz", "gelo"]
 
-        for player in existing_players:
+        for player, wpr in zip(existing_players, win_play_ratios):
             player_record = PlayerFactory(name=player)
             self.db.session.add(
                 GameSessionRecordFactory(
                     player=player_record,
-                    game_session=gs
+                    game_session=gs,
+                    games_won=wpr[0],
+                    games_played=wpr[1]
                 )
             )
         self.db.session.add(gs)
@@ -114,11 +118,31 @@ class ApiTests(AppTestCase):
         ):
             return_value = api.new_game_records()
             self.assertEqual("OK", return_value)
-            game_sessions = (
-                self.db.session.query(GameSession)
-                .filter(GameSession.game_type_id == one_night_game.id)
-                .filter(self.freeze_time <= GameSession.created_at)
-                .all()
+
+        game_sessions = (
+            self.db.session.query(GameSession)
+            .filter(GameSession.game_type_id == one_night_game.id)
+            .filter(self.freeze_time <= GameSession.created_at)
+            .all()
+        )
+        self.assertEqual(1, len(game_sessions))
+        self.assertEqual(game_sessions[0].id, gs.id)
+
+        for player, wpr in zip(existing_players, win_play_ratios):
+            player_record = (
+                self.db.session.query(Player)
+                .filter(Player.name == player)
+                .first()
             )
-            self.assertEqual(1, len(game_sessions))
-            self.assertEqual(game_sessions[0].id, gs.id)
+            game_session_record = (
+                self.db.session.query(GameSessionRecord)
+                .filter(GameSessionRecord.game_session_id == gs.id)
+                .filter(GameSessionRecord.player_id == player_record.id)
+                .first()
+            )
+            self.assertEqual(wpr[1] + 1, game_session_record.games_played)
+
+            if player in winners:
+                self.assertEqual(wpr[0] + 1, game_session_record.games_won)
+            else:
+                self.assertEqual(wpr[0], game_session_record.games_won)
