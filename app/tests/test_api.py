@@ -1,4 +1,5 @@
 from .base import AppTestCase
+from .factories import *
 from app import db
 from app import api
 from app.models import GameSession, GameSessionRecord, GameType, Player
@@ -88,11 +89,23 @@ class ApiTests(AppTestCase):
             .first()
         )
         gs = GameSession(game_type=one_night_game, created_at=self.freeze_time)
+
+        existing_players = ["chad", "je"]
+        new_players = ["shara", "franz", "gelo"]
+
+        for player in existing_players:
+            player_record = PlayerFactory(name=player)
+            self.db.session.add(
+                GameSessionRecordFactory(
+                    player=player_record,
+                    game_session=gs
+                )
+            )
         self.db.session.add(gs)
         self.db.session.flush()
         with self.app.test_request_context("/game_record/new",
             data={
-                "players": ["chad", "je", "shara", "franz", "gelo"],
+                "players": existing_players + new_players,
                 "winners": ["chad"],
                 "session-date": datetime.now().isoformat(),
                 "game-type": one_night_game.id,
