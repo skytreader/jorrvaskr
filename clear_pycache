@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sudo rm -rf app/tests/__pycache__
