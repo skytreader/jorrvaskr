@@ -143,6 +143,11 @@ class Faction(db.Model):
         server_default=db.func.current_timestamp()
     )
 
+    @staticmethod
+    def get_faction_from_name(faction_name):
+        name = Faction.query.filter_by(name=faction_name).first()
+        return name
+
 class FactionTally(db.Model):
     """
     This records the number of times a certain faction won. We don't record the
