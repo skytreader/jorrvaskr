@@ -17,6 +17,8 @@ database. So do (after `docker-compose up`),
 
 ## Dumping the database contents
 
+> **FIXME:** Dump as binary blob instead.
+
 Is as simple as
 
     docker-compose exec db su postgres -c "pg_dump jorrvaskr" > jorrvaskr.sql

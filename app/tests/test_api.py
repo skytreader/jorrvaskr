@@ -2,9 +2,11 @@ from .base import AppTestCase
 from .factories import *
 from app import db
 from app import api
-from app.models import GameSession, GameSessionRecord, GameType, Player
+from app.models import Faction, GameSession, GameSessionRecord, GameType, Player
 from datetime import datetime
 from freezegun import freeze_time
+
+import app.tests.factories as f
 
 FREEZE_DATE = "2019-01-28"
 
@@ -146,3 +148,27 @@ class ApiTests(AppTestCase):
                 self.assertEqual(wpr[0] + 1, game_session_record.games_won)
             else:
                 self.assertEqual(wpr[0], game_session_record.games_won)
+
+    def test_edit_faction_record(self):
+        # Create the records first
+        werewolves = Faction.get_faction_from_name("Werewolves")
+        villagers = Faction.get_faction_from_name("Villagers")
+        self.assertTrue(werewolves is not None)
+        self.assertTrue(villagers is not None)
+        one_night_game = self.game_type_map["One Night"]
+
+        game_session1 = f.GameSessionFactory(game_type=one_night_game)
+        self.db.session.add(f.FactionTallyFactory(
+            faction=werewolves, game_session=game_session1, games_won=1
+        ))
+        self.db.session.add(f.FactionTallyFactory(
+            faction=villagers, game_session=game_session1, games_won=2
+        ))
+
+        players = (
+            "chad", "je", "aya", "mark ian", "josh", "gab", "renzo", "armando",
+            "angel", "matthew"
+        )
+
+        for idx, name in enumerate(players):
+            self.db.session.add(PlayerFactory(id=idx + 1, name=name))
