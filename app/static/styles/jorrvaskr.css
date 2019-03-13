@@ -4,6 +4,10 @@ body {
     font-family: sans-serif;
 }
 
+a {
+    color: #f3f2ac;
+}
+
 .logo-container {
     float: left;
     flex: auto;
