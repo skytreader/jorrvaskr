@@ -22,7 +22,7 @@ pc.sendEdit = function(win_log_id){
         xhr.open("POST", "/game_record/edit/winlog", true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         xhr.send(queryStringComponents.join("&"));
-        hideElements(["records-error-area"]);
+        window.location.reload(true);
     }
 }
 
