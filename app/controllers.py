@@ -123,7 +123,7 @@ def view_user_record(playerid):
         ).filter(WinLog.game_session_id == GameSession.id)
         .filter(WinLog.faction_id == Faction.id)
         .filter(WinLog.player_id == playerid)
-        .order_by(GameSession.created_at)
+        .order_by(GameSession.created_at, WinLog.id)
         .all()
     )
 
