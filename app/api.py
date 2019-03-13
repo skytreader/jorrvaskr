@@ -116,4 +116,4 @@ def edit_winlog():
     winlog_record.last_modified = datetime.now()
 
     db.session.commit()
-    return 200, "OK"
+    return "OK", 200
