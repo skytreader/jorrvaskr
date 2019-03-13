@@ -70,3 +70,32 @@ def records_view():
             .all()
         )
     return render_template("records-view.jinja", records=records_per_type)
+
+@bp.route("/records/view/<int:playerid>")
+def view_user_record(playerid):
+    context = {}
+    context["player_name"] = (
+        db.session.query(Player.name)
+        .filter(Player.id == playerid)
+        .scalar()
+    )
+    played_won_qr = (
+        db.session.query(
+            Player.id,
+            GameSession.game_type_id,
+            func.sum(GameSessionRecord.games_played),
+            func.sum(GameSessionRecord.games_won)
+        ).filter(GameSession.id == GameSessionRecord.game_session_id)
+        .filter(GameSessionRecord.player_id == Player.id)
+        .group_by(Player.id, GameSession.game_type_id)
+        .all()
+    )
+    context["played_won"] = [
+        {
+            "game_type": GameType.get_label_by_id(pwq[1]),
+            "played": pwq[2],
+            "won": pwq[3]
+        } for pwq in played_won_qr
+    ]
+
+    return render_template("view-user-record.jinja", **context)

@@ -41,6 +41,10 @@ class GameType(db.Model):
         gametype = GameType.query.filter_by(label=label).first()
         return gametype
 
+    @staticmethod
+    def get_label_by_id(_id):
+        return GameType.query.filter_by(id=_id).first().label
+
 class Player(db.Model):
 
     __tablename__ = "players"
