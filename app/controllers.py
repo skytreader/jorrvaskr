@@ -74,7 +74,9 @@ def records_view():
 
 @bp.route("/records/view/<int:playerid>")
 def view_user_record(playerid):
-    context = {}
+    context = {
+        "scripts": ("view-user-record.js",)
+    }
     context["player_name"] = (
         db.session.query(Player.name)
         .filter(Player.id == playerid)
@@ -114,6 +116,7 @@ def view_user_record(playerid):
 
     context["detailed_winlog"] = (
         db.session.query(
+            WinLog.id,
             GameSession.created_at,
             Faction.name
         ).filter(WinLog.game_session_id == GameSession.id)

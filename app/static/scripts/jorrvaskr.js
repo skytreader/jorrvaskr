@@ -28,10 +28,10 @@ function hideElements(promptIds){
     }
 }
 
-function showElements(promptIds){
+function showElements(promptIds, displayStyle="block"){
     var limit = promptIds.length;
     for (var i = 0; i < limit; i++){
-        gid(promptIds[i]).style.display = "block";
+        gid(promptIds[i]).style.display = displayStyle;
     }
 }
 
