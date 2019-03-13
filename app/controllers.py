@@ -61,13 +61,14 @@ def records_view():
     for gt in game_types:
         records_per_type[gt.label] = (
             db.session.query(
+                Player.id,
                 Player.name,
                 func.sum(GameSessionRecord.games_played),
                 func.sum(GameSessionRecord.games_won)
             ).filter(GameSession.id == GameSessionRecord.game_session_id)
             .filter(GameSession.game_type_id == gt.id)
             .filter(GameSessionRecord.player_id == Player.id)
-            .group_by(Player.name)
+            .group_by(Player.id, Player.name)
             .all()
         )
     return render_template("records-view.jinja", records=records_per_type)

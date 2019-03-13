@@ -11,9 +11,13 @@
         <tr><th>Player</th><th>Games Played</th><th>Games Won</th></tr>
         {% for player_record in records[game_type]: %}
           <tr>
-            <td>{{ player_record[0] }}</td>
-            <td>{{ player_record[1] }}</td>
+            <td>
+              <a href="/records/view/{{ player_record[0] }}">
+                {{ player_record[1] }}
+              </a>
+            </td>
             <td>{{ player_record[2] }}</td>
+            <td>{{ player_record[3] }}</td>
           </tr>
         {% endfor %}
       </table>
