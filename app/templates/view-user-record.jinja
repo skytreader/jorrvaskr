@@ -21,6 +21,38 @@
           <td>{{ pw_summary["won"] / pw_summary["played"] }}</td>
       {% endfor %}
     </table>
+    {# GameSessionRecords won't always map to WinLogs. So we need to check. #}
+    {% if winlog_summary: %}
+      <h2>Best Factions</h2>
+      <p>{{ player_name }} plays {{ winlog_summary[0][0] }} the best.</p>
+      <table>
+        <tr>
+          <th>Faction Name</th>
+          <th>Times won</th>
+        </tr>
+        {% for faction_tally in winlog_summary: %}
+          <tr>
+            <td>{{ faction_tally[0] }}</td>
+            <td>{{ faction_tally[1] }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+
+      <h2>Record</h2>
+      <table>
+        <tr>
+          <th>Session Date</th>
+          <th>Faction Name</th>
+        </tr>
+        {% for record in detailed_winlog: %}
+          <tr>
+            <td>{{ record[0] }}</td>
+            <td>{{ record[1] }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+    <p>
   {% else: %}
     <h3>{{ player_name }} has not yet played any games.</h3>
   {% endif %}

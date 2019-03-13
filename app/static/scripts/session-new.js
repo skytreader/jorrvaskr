@@ -185,6 +185,7 @@ pc.playAgain = function(){
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/game_record/new", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    // FIXME handle the outcome of this send
     xhr.send(queryStringComponents.join("&"));
     if (factionWon == "Tanner" && gameType != "1"){
         var shouldContinue = confirm("Aw Tanner won. No fun! Continue with the game anyway?");

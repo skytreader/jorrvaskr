@@ -1,6 +1,7 @@
 from app import app, db
 from app.models import (
-    Faction, FactionTally, GameSession, GameSessionRecord, GameType, Player
+    Faction, FactionTally, GameSession, GameSessionRecord, GameType, Player,
+    WinLog
 )
 from flask import Blueprint, render_template, request
 from sqlalchemy.sql import func
@@ -79,6 +80,8 @@ def view_user_record(playerid):
         .filter(Player.id == playerid)
         .scalar()
     )
+
+    # TODO This can be simplified so that we don't need a dictionary anymore.
     played_won_qr = (
         db.session.query(
             GameSession.game_type_id,
@@ -96,5 +99,28 @@ def view_user_record(playerid):
             "won": pwq[2]
         } for pwq in played_won_qr
     ]
+
+    winlog_summary_qr = (
+        db.session.query(
+            Faction.name,
+            func.count(WinLog.game_session_id).label("win_counts")
+        ).filter(WinLog.player_id == playerid)
+        .filter(WinLog.faction_id == Faction.id)
+        .group_by(Faction.name)
+        .order_by("win_counts DESC")
+        .all()
+    )
+    context["winlog_summary"] = winlog_summary_qr
+
+    context["detailed_winlog"] = (
+        db.session.query(
+            GameSession.created_at,
+            Faction.name
+        ).filter(WinLog.game_session_id == GameSession.id)
+        .filter(WinLog.faction_id == Faction.id)
+        .filter(WinLog.player_id == playerid)
+        .order_by(GameSession.created_at)
+        .all()
+    )
 
     return render_template("view-user-record.jinja", **context)
