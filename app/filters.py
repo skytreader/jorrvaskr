@@ -1,7 +1,5 @@
 from app import app
 
-print("hi from filters")
-
 @app.template_filter()
 def possessive_form(s):
     """
