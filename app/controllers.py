@@ -81,20 +81,19 @@ def view_user_record(playerid):
     )
     played_won_qr = (
         db.session.query(
-            Player.id,
             GameSession.game_type_id,
             func.sum(GameSessionRecord.games_played),
             func.sum(GameSessionRecord.games_won)
         ).filter(GameSession.id == GameSessionRecord.game_session_id)
-        .filter(GameSessionRecord.player_id == Player.id)
-        .group_by(Player.id, GameSession.game_type_id)
+        .filter(GameSessionRecord.player_id == playerid)
+        .group_by(GameSession.game_type_id)
         .all()
     )
     context["played_won"] = [
         {
-            "game_type": GameType.get_label_by_id(pwq[1]),
-            "played": pwq[2],
-            "won": pwq[3]
+            "game_type": GameType.get_label_by_id(pwq[0]),
+            "played": pwq[1],
+            "won": pwq[2]
         } for pwq in played_won_qr
     ]
 

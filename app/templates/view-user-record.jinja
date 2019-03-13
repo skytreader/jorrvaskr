@@ -3,6 +3,26 @@
 {% block title %}Records for {{ player_name }}{% endblock %}
 {% block content %}
 <div class="data-section">
-  <!--h1>{{ player_name | possessive_form }} record</h1-->
+  <h1>{{ player_name | possessive_form }} record</h1>
+  <h2>Summary</h2>
+  {% if played_won: %}
+    <table>
+      <tr>
+        <th>Game Type</th>
+        <th>Played</th>
+        <th>Won</th>
+        <th>Win Ratio</th>
+      </tr>
+      {% for pw_summary in played_won: %}
+        <tr>
+          <td>{{ pw_summary["game_type"] }}</td>
+          <td>{{ pw_summary["played"] }}</td>
+          <td>{{ pw_summary["won"] }}</td>
+          <td>{{ pw_summary["won"] / pw_summary["played"] }}</td>
+      {% endfor %}
+    </table>
+  {% else: %}
+    <h3>{{ player_name }} has not yet played any games.</h3>
+  {% endif %}
 </div>
 {% endblock %}
