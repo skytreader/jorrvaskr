@@ -2,6 +2,7 @@ from app import app
 
 print("hi from filters")
 
+@app.template_filter()
 def possessive_form(s):
     """
     Give off the prossessive form of the string, assumed to be a noun. No
