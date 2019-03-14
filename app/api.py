@@ -93,25 +93,6 @@ def edit_winlog():
     if winlog_record is None:
         return "Nonexistent WinLog id", 400
 
-    # We are sure that this faction tally exists. Or are we?
-    oldfaction_tally = (
-        db.session.query(FactionTally)
-        .filter(FactionTally.faction_id == winlog_record.faction_id)
-        .filter(FactionTally.game_session_id == winlog_record.game_session_id)
-        .first()
-    )
-    oldfaction_tally.games_won -= 1
-    oldfaction_tally.last_modified = datetime.now()
-
-    new_faction = get_or_create(Faction, name=updated_faction)
-    newfaction_tally = get_or_create(
-        FactionTally,
-        faction_id = new_faction.id,
-        game_session_id = winlog_record.game_session_id
-    )
-    newfaction_tally.games_won += 1
-    newfaction_tally.last_modified = datetime.now()
-
     winlog_record.faction_id = new_faction.id
     winlog_record.last_modified = datetime.now()
 
