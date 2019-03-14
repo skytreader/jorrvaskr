@@ -5,14 +5,19 @@
 <div class="data-section">
   {% for game_type in records: %}
     <h3>{{ game_type }}</h3>
+    <p>Click on the player name to edit/view a detailed breakdown.</p>
     {% if records[game_type]: %}
       <table>
         <tr><th>Player</th><th>Games Played</th><th>Games Won</th></tr>
         {% for player_record in records[game_type]: %}
           <tr>
-            <td>{{ player_record[0] }}</td>
-            <td>{{ player_record[1] }}</td>
+            <td>
+              <a href="/records/view/{{ player_record[0] }}">
+                {{ player_record[1] }}
+              </a>
+            </td>
             <td>{{ player_record[2] }}</td>
+            <td>{{ player_record[3] }}</td>
           </tr>
         {% endfor %}
       </table>

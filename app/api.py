@@ -78,3 +78,23 @@ def new_game_records():
 
     db.session.commit()
     return "OK"
+
+@bp.route("/game_record/edit/winlog", methods=("POST",))
+def edit_winlog():
+    winlog_id = int(request.form.get("id"))
+    updated_faction = request.form.get("faction")
+
+    winlog_record = (
+        db.session.query(WinLog)
+        .filter(WinLog.id == winlog_id)
+        .first()
+    )
+
+    if winlog_record is None:
+        return "Nonexistent WinLog id", 400
+
+    winlog_record.faction_id = new_faction.id
+    winlog_record.last_modified = datetime.now()
+
+    db.session.commit()
+    return "OK", 200

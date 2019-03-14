@@ -9,6 +9,9 @@ if __name__ == "__main__":
     while True:
         try:
             app.app = app.make_app(os.environ.get("JORRVASKR_CONFIG", "config.Config"))
+            # Import it just so it triggers.
+            # FIXME There should be a cleaner way to do this.
+            from app import filters
             app.app.run(host=os.environ.get("JORRVASKR_HOST", "0.0.0.0"))
         except (KeyboardInterrupt, SystemExit, socket.error):
             print("Caught terminal signal")

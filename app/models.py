@@ -36,6 +36,15 @@ class GameType(db.Model):
         server_default=db.func.current_timestamp()
     )
 
+    @staticmethod
+    def get_gametype_from_label(label):
+        gametype = GameType.query.filter_by(label=label).first()
+        return gametype
+
+    @staticmethod
+    def get_label_by_id(_id):
+        return GameType.query.filter_by(id=_id).first().label
+
 class Player(db.Model):
 
     __tablename__ = "players"
@@ -142,6 +151,11 @@ class Faction(db.Model):
         default=db.func.current_timestamp(),
         server_default=db.func.current_timestamp()
     )
+
+    @staticmethod
+    def get_faction_from_name(faction_name):
+        faction = Faction.query.filter_by(name=faction_name).first()
+        return faction 
 
 class FactionTally(db.Model):
     """

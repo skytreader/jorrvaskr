@@ -9,13 +9,9 @@ from app.models import (
     WinLog,
     WinWeight
 )
-from faker import Faker
 
 import factory
 import random
-
-
-fake = Faker()
 
 
 class GameTypeFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -34,7 +30,7 @@ class PlayerFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session = db.session
 
     id = factory.Sequence(lambda n: n)
-    name = factory.LazyAttribute(lambda x: fake.first_name())
+    name = factory.Faker("first_name")
 
 class GameSessionFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
@@ -56,3 +52,19 @@ class GameSessionRecordFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     game_session = factory.SubFactory(GameSessionFactory)
     player = factory.SubFactory(PlayerFactory)
+
+class FactionFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = Faction
+        sqlalchemy_session = db.session
+
+    name = factory.Faker("sentence", nb_words=2)
+
+class FactionTallyFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = FactionTally
+        sqlalchemy_session = db.session
+
+    faction = factory.SubFactory(FactionFactory)
+    game_session = factory.SubFactory(GameSessionFactory)
+    games_won = factory.LazyAttribute(lambda x: random.randint(0, 20))

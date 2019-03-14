@@ -17,13 +17,32 @@ class AppTestCase(TestCase):
         from app.models import GameType, Faction
         self.app = self.create_app()
         self.db = App.db
-        self.db.session.add(GameType(label="One Night"))
-        self.db.session.add(GameType(label="Ultimate"))
-        self.db.session.add(Faction(name="Werewolves"))
-        self.db.session.add(Faction(name="Villagers"))
-        self.db.session.add(Faction(name="Tanner"))
-        self.db.session.add(Faction(name="Lovers"))
+        _one_night = GameType(label="One Night")
+        _ultimate = GameType(label="Utimate")
+        self.db.session.add(_one_night)
+        self.db.session.add(_ultimate)
+
+        _werewolves = Faction(name="Werewolves")
+        _villagers = Faction(name="Villagers")
+        _tanner = Faction(name="Tanner")
+        _lovers = Faction(name="Lovers")
+        self.db.session.add(_werewolves)
+        self.db.session.add(_villagers)
+        self.db.session.add(_tanner)
+        self.db.session.add(_lovers)
         self.db.session.flush()
+
+        self.game_type_map = {
+            "One Night": _one_night,
+            "Ultimate": _ultimate
+        }
+
+        self.faction_map = {
+            "Werewolves": _werewolves,
+            "Villagers": _villagers,
+            "Tanner": _tanner,
+            "Lovers": _lovers
+        }
 
     def __delete_table(self, tbl_name):
         # WARNING: Prone to injections. But we are deleting anyway and this is
