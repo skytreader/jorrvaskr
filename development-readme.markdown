@@ -4,7 +4,7 @@
 
 > **NOTE ON DUMPING AND RELOADING:** Right now, the instructions will lead you
 > to creating a text dump. While this is not ideal, it is only because I can't
-> get other dump formats to work.
+> get other dump formats to work...yet.
 
 ### Dumping the database contents
 
@@ -18,20 +18,39 @@ Assuming the dump is created as above.
 
 0. Edit the SQL dump and add the following line at the top:
 
+    ```sql
     SET session_replication_role = replica;
+    ```
 
 1. Run the containers althought for this whole operation, only the DB would
 actually matter:
 
+    ```
     docker-compose up
+    ```
 
 2. Copy the dump into the DB container:
 
+    ```
     docker cp <path_to_dbdump> jorrvaskr_db_1:/tmp
+    ```
 
 3. Then, restore from file:
 
+    ```
     docker-compose exec db su postgres -c "psql -d jorrvaskr < /tmp/jorrvaskr.sql"
+    ```
+
+### Creating migrations
+
+1. Install virtualenv and create a virtualenv for jorrvaskr.
+2. While inside a virtualenv (_outside_ Docker containers) do
+    
+    ```
+    alembic revision -m "revision message"
+    ```
+
+3. To run, spin up the Docker containers and do
 
 ## Testing
 
