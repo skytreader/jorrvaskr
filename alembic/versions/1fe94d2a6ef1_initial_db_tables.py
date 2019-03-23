@@ -20,7 +20,7 @@ depends_on = None
 def upgrade():
     conn = op.get_bind()
     inspector = Inspector.from_engine(conn)
-    tables = Inspector.get_table_names()
+    tables = inspector.get_table_names()
     not_exists = lambda tbl: tbl not in tables
 
     if not_exists("game_types"):
@@ -147,7 +147,7 @@ def upgrade():
                     ondelete="CASCADE"
                 ),
                 primary_key=True
-            )
+            ),
             sa.Column(
                 "games_won", sa.Integer, nullable=False, default=0,
                 server_default="0"
@@ -179,7 +179,7 @@ def upgrade():
                     ondelete="CASCADE"
                 ),
                 nullable=False
-            )
+            ),
             sa.Column(
                 "faction_id",
                 sa.ForeignKey(
