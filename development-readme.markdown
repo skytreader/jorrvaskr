@@ -52,6 +52,17 @@ actually matter:
 
 3. To run, spin up the Docker containers and do
 
+    ```
+    docker-compose exec web bash
+    ```
+
+   Once inside the container:
+
+    ```
+    cd jorrvaskr
+    alembic upgrade head
+    ```
+
 ## Testing
 
 Build the main image (if you haven't already):
