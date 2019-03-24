@@ -50,7 +50,8 @@ actually matter:
     alembic revision -m "revision message"
     ```
 
-3. To run, spin up the Docker containers and do
+3. Edit the resulting file to write your migration.
+4. To run, spin up the Docker containers and do
 
     ```
     docker-compose exec web bash
