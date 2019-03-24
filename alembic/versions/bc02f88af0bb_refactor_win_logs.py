@@ -17,8 +17,8 @@ depends_on = None
 
 
 def upgrade():
-    pass
+    op.rename_table("win_logs", "player_win_logs")
 
 
 def downgrade():
-    pass
+    op.rename_table("player_win_logs", "win_logs")

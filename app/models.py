@@ -206,7 +206,7 @@ class FactionTally(db.Model):
     faction = relationship("Faction")
     game_session = relationship("GameSession")
 
-class WinLog(db.Model):
+class PlayerWinLog(db.Model):
     """
     A slightly more detailed record of wins. One win for one player is one, and
     only one, row in this table. In addition to that, this will also record the
@@ -216,7 +216,7 @@ class WinLog(db.Model):
     is because in our original tracking, such detailed information was not kept.
     """
 
-    __tablename__ = "win_logs"
+    __tablename__ = "player_win_logs"
     id = db.Column(db.Integer, primary_key=True)
     player_id = db.Column(
         db.Integer,

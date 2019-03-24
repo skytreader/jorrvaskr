@@ -1,7 +1,7 @@
 from app import app, db
 from app.models import (
     Faction, FactionTally, GameSession, GameSessionRecord, GameType, Player,
-    WinLog
+    PlayerWinLog
 )
 from flask import Blueprint, render_template, request
 from sqlalchemy.sql import func
@@ -106,9 +106,9 @@ def view_user_record(playerid):
     winlog_summary_qr = (
         db.session.query(
             Faction.name,
-            func.count(WinLog.game_session_id).label("win_counts")
-        ).filter(WinLog.player_id == playerid)
-        .filter(WinLog.faction_id == Faction.id)
+            func.count(PlayerWinLog.game_session_id).label("win_counts")
+        ).filter(PlayerWinLog.player_id == playerid)
+        .filter(PlayerWinLog.faction_id == Faction.id)
         .group_by(Faction.name)
         .order_by("win_counts DESC")
         .all()
@@ -117,13 +117,13 @@ def view_user_record(playerid):
 
     context["detailed_winlog"] = (
         db.session.query(
-            WinLog.id,
+            PlayerWinLog.id,
             GameSession.created_at,
             Faction.name
-        ).filter(WinLog.game_session_id == GameSession.id)
-        .filter(WinLog.faction_id == Faction.id)
-        .filter(WinLog.player_id == playerid)
-        .order_by(GameSession.created_at, WinLog.id)
+        ).filter(PlayerWinLog.game_session_id == GameSession.id)
+        .filter(PlayerWinLog.faction_id == Faction.id)
+        .filter(PlayerWinLog.player_id == playerid)
+        .order_by(GameSession.created_at, PlayerWinLog.id)
         .all()
     )
 

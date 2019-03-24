@@ -6,7 +6,7 @@ from app.models import (
     GameSessionRecord,
     Faction,
     FactionTally,
-    WinLog,
+    PlayerWinLog,
     WinWeight
 )
 

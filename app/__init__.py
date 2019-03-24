@@ -31,7 +31,7 @@ def init_db(app):
     
     from .models import (
         GameType, Player, GameSession, GameSessionRecord, Faction, FactionTally,
-        WinLog, WinWeight
+        PlayerWinLog, WinWeight
     )
     db.create_all()
     db.session.commit()

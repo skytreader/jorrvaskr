@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from app import app, db
 from app.models import (
     get_or_create, Faction, FactionTally, GameSession, GameSessionRecord,
-    Player, WinLog
+    Player, PlayerWinLog
 )
 
 from datetime import datetime, timedelta
@@ -69,7 +69,7 @@ def new_game_records():
             player_game_session_records[p].games_won += 1
             player_game_session_records[p].last_modified = datetime.now()
             db.session.add(
-                WinLog(
+                PlayerWinLog(
                     player=player_map[p],
                     game_session=game_session,
                     faction=faction
@@ -85,13 +85,13 @@ def edit_winlog():
     updated_faction = request.form.get("faction")
 
     winlog_record = (
-        db.session.query(WinLog)
-        .filter(WinLog.id == winlog_id)
+        db.session.query(PlayerWinLog)
+        .filter(PlayerWinLog.id == winlog_id)
         .first()
     )
 
     if winlog_record is None:
-        return "Nonexistent WinLog id", 400
+        return "Nonexistent PlayerWinLog id", 400
 
     winlog_record.faction_id = new_faction.id
     winlog_record.last_modified = datetime.now()
