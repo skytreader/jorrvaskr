@@ -209,17 +209,17 @@ class FactionTally(db.Model):
 class FactionWinLog(db.Model):
     __tablename__ = "faction_win_logs"
     id = db.Column(db.Integer, primary_key=True)
-    faction_id = db.Column(
-        db.Integer,
-        db.ForeignKey(
-            "factions.id", name="winlog_factions_fk3",
-            ondelete="CASCADE"
-        ), nullable=False
-    )
     game_session_id = db.Column(
         db.Integer,
         db.ForeignKey(
-            "game_sessions.id", name="winlog_gamesessions_fk2",
+            "game_sessions.id", name="factionwinlog_gamesessions_fk1",
+            ondelete="CASCADE"
+        ), nullable=False
+    )
+    faction_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            "factions.id", name="factionwinlog_factions_fk2",
             ondelete="CASCADE"
         ), nullable=False
     )
@@ -249,25 +249,26 @@ class PlayerWinLog(db.Model):
 
     __tablename__ = "player_win_logs"
     id = db.Column(db.Integer, primary_key=True)
+    faction_win_log_id = db.Column(
+        db.integer
+    )
     player_id = db.Column(
         db.Integer,
         db.ForeignKey(
             "players.id", name="winlog_player_fk1", ondelete="CASCADE"
         ), nullable=False
     )
-    game_session_id = db.Column(
+    # This is nullable because in the future we want to import player win log
+    # data from sources which might not have been as stringent as this data
+    # model in keeping track of things (*ahem*spreadsheet*ahem*).
+    faction_win_log_id = db.Column(
         db.Integer,
         db.ForeignKey(
-            "game_sessions.id", name="winlog_gamesessions_fk2",
+            "faction_win_logs.id",
+            name="playerwinlog_factionwinlog_fk2",
             ondelete="CASCADE"
-        ), nullable=False
-    )
-    faction_id = db.Column(
-        db.Integer,
-        db.ForeignKey(
-            "factions.id", name="winlog_factions_fk3",
-            ondelete="CASCADE"
-        ), nullable=False
+        ),
+        nullable=True
     )
     created_at = db.Column(
         db.DateTime, nullable=False,
@@ -281,8 +282,7 @@ class PlayerWinLog(db.Model):
     )
 
     player = relationship("Player")
-    game_session = relationship("GameSession")
-    faction = relationship("Faction")
+    faction_win_log = relationship("FactionWinLog")
 
 class WinWeight(db.Model):
 

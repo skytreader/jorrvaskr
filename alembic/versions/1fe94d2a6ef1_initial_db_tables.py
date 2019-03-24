@@ -167,6 +167,7 @@ def upgrade():
             sa.Column("id", sa.Integer, primary_key=True),
             sa.Column(
                 "player_id",
+                sa.Integer,
                 sa.ForeignKey(
                     "players.id", name="winlog_player_fk1", ondelete="CASCADE"
                 ),
@@ -174,6 +175,7 @@ def upgrade():
             ),
             sa.Column(
                 "game_session_id",
+                sa.Integer,
                 sa.ForeignKey(
                     "game_sessions.id", name="winlog_gamesessions_fk2",
                     ondelete="CASCADE"
