@@ -17,6 +17,33 @@ depends_on = None
 
 
 def upgrade():
+    op.create_table(
+        "faction_win_logs",
+        sa.Column("id", sa.Integer, primary_key=True),
+        sa.Column(
+            "game_session_id",
+            sa.ForeignKey(
+                "game_sessions.id", name="winlog_gamesessions_fk2",
+                ondelete="CASCADE"
+            ),
+            nullable=False
+        ),
+        sa.Column(
+            "faction_id",
+            sa.ForeignKey(
+                "factions.id", name="winlog_factions_fk3", ondelete="CASCADE"
+            ),
+            nullable=False
+        ),
+        sa.Column(
+            "created_at", sa.DateTime, nullable=False,
+            server_default=sa.func.current_timestamp()
+        ),
+        sa.Column(
+            "last_modified", sa.DateTime, nullable=False,
+            server_default=sa.func.current_timestamp()
+        )
+    )
     op.rename_table("win_logs", "player_win_logs")
 
 

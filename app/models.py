@@ -206,6 +206,37 @@ class FactionTally(db.Model):
     faction = relationship("Faction")
     game_session = relationship("GameSession")
 
+class FactionWinLog(db.Model):
+    __tablename__ = "faction_win_logs"
+    id = db.Column(db.Integer, primary_key=True)
+    faction_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            "factions.id", name="winlog_factions_fk3",
+            ondelete="CASCADE"
+        ), nullable=False
+    )
+    game_session_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            "game_sessions.id", name="winlog_gamesessions_fk2",
+            ondelete="CASCADE"
+        ), nullable=False
+    )
+    created_at = db.Column(
+        db.DateTime, nullable=False,
+        default=db.func.current_timestamp(),
+        server_default=db.func.current_timestamp()
+    )
+    last_modified = db.Column(
+        db.DateTime, nullable=False,
+        default=db.func.current_timestamp(),
+        server_default=db.func.current_timestamp()
+    )
+
+    game_session = relationship("GameSession")
+    faction = relationship("Faction")
+
 class PlayerWinLog(db.Model):
     """
     A slightly more detailed record of wins. One win for one player is one, and
