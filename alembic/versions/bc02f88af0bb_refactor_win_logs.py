@@ -22,17 +22,17 @@ def upgrade():
     now = datetime.now()
     conn = op.get_bind()
     metadata = sa.MetaData(bind=conn)
-    win_logs_table = sa.Table("win_logs", meta, autoload=True)
+    win_logs_table = sa.Table("win_logs", metadata, autoload=True)
 
     # Get the contents of faction_win_logs from win_logs
     # Only works because right now we are sure that win_logs has so few records.
     # In actuality, should block this transaction.
     derived_faction_wins = conn.execute(
-        select([distinct(
+        select([distinct((
             win_logs_table.c.game_session_id,
             win_logs_table.c.faction_id,
             win_logs_table.c.created_at
-        )]).fetchall()
+        ))])
     )
     faction_win_logs_table = op.create_table(
         "faction_win_logs",
@@ -101,6 +101,7 @@ def downgrade():
         "win_logs",
         sa.Column(
             "faction_id",
+            sa.Integer,
             sa.ForeignKey(
                 "factions.id", name="winlog_factions_fk3", ondelete="CASCADE"
             ),
@@ -109,6 +110,7 @@ def downgrade():
     )
     op.add_column(
         "win_logs",
+        sa.Integer,
         sa.Column(
             "game_session_id",
             sa.Integer,
@@ -120,8 +122,8 @@ def downgrade():
         )
     )
     
-    faction_wins_table = sa.Table("faction_wins", meta, autoload=True)
-    win_logs_table = sa.Table("win_logs", meta, autoload=True)
+    faction_wins_table = sa.Table("faction_wins", metadata, autoload=True)
+    win_logs_table = sa.Table("win_logs", metadata, autoload=True)
 
     # This assumes that the tuple (game_session_id, faction_id, created_at) is a
     # unique. While the DB does not enforce this constraint, this actually
@@ -133,7 +135,7 @@ def downgrade():
             faction_wins_table.c.game_session_id,
             faction_wins_table.c.faction_id,
             faction_wins_table.c.created_at
-        ]).fetchall()
+        ])
     )
 
     for win_record in faction_win_records:
