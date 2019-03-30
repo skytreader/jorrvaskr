@@ -249,9 +249,6 @@ class PlayerWinLog(db.Model):
 
     __tablename__ = "player_win_logs"
     id = db.Column(db.Integer, primary_key=True)
-    faction_win_log_id = db.Column(
-        db.integer
-    )
     player_id = db.Column(
         db.Integer,
         db.ForeignKey(
