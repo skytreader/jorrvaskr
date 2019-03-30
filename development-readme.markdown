@@ -43,6 +43,10 @@ actually matter:
 
 ### Creating migrations
 
+> **ISSUE:** Given the way Docker and Flask work, switching to a branch with a
+> migration ongoing will automatically create the new tables in the database
+> which a migration might just be adding.
+
 1. Install virtualenv and create a virtualenv for jorrvaskr.
 2. While inside a virtualenv (_outside_ Docker containers) do
     
