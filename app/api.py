@@ -1,8 +1,8 @@
 from flask import Blueprint, request
 from app import app, db
 from app.models import (
-    get_or_create, Faction, FactionTally, GameSession, GameSessionRecord,
-    Player, PlayerWinLog
+    get_or_create, Faction, FactionTally, FactionWinLog, GameSession,
+    GameSessionRecord, Player, PlayerWinLog
 )
 
 from datetime import datetime, timedelta
@@ -52,6 +52,7 @@ def new_game_records():
     )
     faction_tally.games_won += 1
     faction_tally.last_modified = datetime.now()
+    faction_win_log = FactionWinLog(faction=faction, game_session=game_session)
 
     # Record player wins/plays
     player_game_session_records = {}
@@ -71,8 +72,7 @@ def new_game_records():
             db.session.add(
                 PlayerWinLog(
                     player=player_map[p],
-                    game_session=game_session,
-                    faction=faction
+                    faction_win_log=faction_win_log
                 )
             )
 
