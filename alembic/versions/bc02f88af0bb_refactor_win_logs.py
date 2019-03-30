@@ -18,6 +18,12 @@ branch_labels = None
 depends_on = None
 
 
+def __parse_distinct_tuple(dt):
+    parsed = dt[1:len(dt) - 1].split(",")
+    assert len(parsed) == 3
+    return (int(parsed[0]), int(parsed[1]), parsed[2])
+
+
 def upgrade():
     now = datetime.now()
     conn = op.get_bind()
@@ -70,11 +76,12 @@ def upgrade():
     )
 
     for faction_win, in derived_faction_wins:
+        parsed_faction_win = __parse_distinct_tuple(faction_win)
         conn.execute(
             faction_win_logs_table.insert(),
-            game_session_id=faction_win[0],
-            faction_id=faction_win[1],
-            created_at=faction_win[2],
+            game_session_id=parsed_faction_win[0],
+            faction_id=parsed_faction_win[1],
+            created_at=parsed_faction_win[2],
             updated_at=now
         )
 
