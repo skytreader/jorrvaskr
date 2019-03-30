@@ -75,5 +75,6 @@ class AppTestCase(TestCase):
         self.__delete_table("game_session_records")
         self.__delete_table("factions")
         self.__delete_table("faction_tallies")
-        self.__delete_table("win_logs")
+        self.__delete_table("faction_win_logs")
+        self.__delete_table("player_win_logs")
         self.__delete_table("win_weights")
