@@ -94,6 +94,12 @@ class GameSession(db.Model):
     game_type = relationship("GameType")
 
 class GameSessionRecord(db.Model):
+    """
+    For every game session, this table is a straight-up tally of a player's win-
+    loss performance, **regardless of faction**.
+
+    See also: FactionTally.
+    """
 
     __tablename__ = "game_session_records"
     __table_args__ = (
@@ -173,6 +179,8 @@ class FactionTally(db.Model):
     of the macabre death of the programmer. Whoever did it left no clues except
     for the cryptic message "SILENCIO" written on the kitchen counter, beside
     some leftover soup stored in a mason jar.)
+
+    See also: GameSessionRecord.
     """
 
     __tablename__ = "faction_tallies"
