@@ -1,0 +1,19 @@
+# vim: set ft=sh:
+#!/bin/bash
+
+# Usage:
+#   load_from_dump <filepath to dump>
+
+if [ $# -eq 0 ]; then
+    echo "Please specify the path to the dump."
+    exit 1
+fi
+
+if [ ! -f $1 ]; then
+    echo "Please specify a dump that exists."
+    exit 1
+fi
+
+plain_file_name=`echo $1 | awk -F/ '{print $NF}'`
+docker cp $1 jorrvaskr_db_1:/tmp
+docker-compose exec db su postgres -c "psql -d jorrvaskr < /tmp/$plain_file_name"

@@ -94,6 +94,12 @@ class GameSession(db.Model):
     game_type = relationship("GameType")
 
 class GameSessionRecord(db.Model):
+    """
+    For every game session, this table is a straight-up tally of a player's win-
+    loss performance, **regardless of faction**.
+
+    See also: FactionTally.
+    """
 
     __tablename__ = "game_session_records"
     __table_args__ = (
@@ -173,6 +179,8 @@ class FactionTally(db.Model):
     of the macabre death of the programmer. Whoever did it left no clues except
     for the cryptic message "SILENCIO" written on the kitchen counter, beside
     some leftover soup stored in a mason jar.)
+
+    See also: GameSessionRecord.
     """
 
     __tablename__ = "faction_tallies"
@@ -206,35 +214,20 @@ class FactionTally(db.Model):
     faction = relationship("Faction")
     game_session = relationship("GameSession")
 
-class WinLog(db.Model):
-    """
-    A slightly more detailed record of wins. One win for one player is one, and
-    only one, row in this table. In addition to that, this will also record the
-    faction of the player and the session in which the win happened.
-
-    Note that this might not fully coincide with the game session records. This
-    is because in our original tracking, such detailed information was not kept.
-    """
-
-    __tablename__ = "win_logs"
+class FactionWinLog(db.Model):
+    __tablename__ = "faction_win_logs"
     id = db.Column(db.Integer, primary_key=True)
-    player_id = db.Column(
-        db.Integer,
-        db.ForeignKey(
-            "players.id", name="winlog_player_fk1", ondelete="CASCADE"
-        ), nullable=False
-    )
     game_session_id = db.Column(
         db.Integer,
         db.ForeignKey(
-            "game_sessions.id", name="winlog_gamesessions_fk2",
+            "game_sessions.id", name="factionwinlog_gamesessions_fk1",
             ondelete="CASCADE"
         ), nullable=False
     )
     faction_id = db.Column(
         db.Integer,
         db.ForeignKey(
-            "factions.id", name="winlog_factions_fk3",
+            "factions.id", name="factionwinlog_factions_fk2",
             ondelete="CASCADE"
         ), nullable=False
     )
@@ -249,9 +242,52 @@ class WinLog(db.Model):
         server_default=db.func.current_timestamp()
     )
 
-    player = relationship("Player")
     game_session = relationship("GameSession")
     faction = relationship("Faction")
+
+class PlayerWinLog(db.Model):
+    """
+    A slightly more detailed record of wins. One win for one player is one, and
+    only one, row in this table. In addition to that, this will also record the
+    faction of the player and the session in which the win happened.
+
+    Note that this might not fully coincide with the game session records. This
+    is because in our original tracking, such detailed information was not kept.
+    """
+
+    __tablename__ = "player_win_logs"
+    id = db.Column(db.Integer, primary_key=True)
+    player_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            "players.id", name="winlog_player_fk1", ondelete="CASCADE"
+        ), nullable=False
+    )
+    # This is nullable because in the future we want to import player win log
+    # data from sources which might not have been as stringent as this data
+    # model in keeping track of things (*ahem*spreadsheet*ahem*).
+    faction_win_log_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            "faction_win_logs.id",
+            name="playerwinlog_factionwinlog_fk2",
+            ondelete="CASCADE"
+        ),
+        nullable=True
+    )
+    created_at = db.Column(
+        db.DateTime, nullable=False,
+        default=db.func.current_timestamp(),
+        server_default=db.func.current_timestamp()
+    )
+    last_modified = db.Column(
+        db.DateTime, nullable=False,
+        default=db.func.current_timestamp(),
+        server_default=db.func.current_timestamp()
+    )
+
+    player = relationship("Player")
+    faction_win_log = relationship("FactionWinLog")
 
 class WinWeight(db.Model):
 

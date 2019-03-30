@@ -21,7 +21,7 @@
           <td>{{ pw_summary["won"] / pw_summary["played"] }}</td>
       {% endfor %}
     </table>
-    {# GameSessionRecords won't always map to WinLogs. So we need to check. #}
+    {# GameSessionRecords won't always map to PlayerWinLogs. So we need to check. #}
     {% if winlog_summary: %}
       <h2>Best Factions</h2>
       <p>{{ player_name }} plays {{ winlog_summary[0][0] }} the best.</p>
