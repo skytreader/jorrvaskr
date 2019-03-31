@@ -115,7 +115,6 @@ def downgrade():
     )
     op.add_column(
         "win_logs",
-        sa.Integer,
         sa.Column(
             "game_session_id",
             sa.Integer,
@@ -127,7 +126,7 @@ def downgrade():
         )
     )
     
-    faction_wins_table = sa.Table("faction_wins", metadata, autoload=True)
+    faction_wins_table = sa.Table("faction_win_logs", metadata, autoload=True)
     win_logs_table = sa.Table("win_logs", metadata, autoload=True)
 
     # This assumes that the tuple (game_session_id, faction_id, created_at) is a
