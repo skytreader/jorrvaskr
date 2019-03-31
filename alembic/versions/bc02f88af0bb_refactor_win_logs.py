@@ -33,13 +33,6 @@ def upgrade():
     # Get the contents of faction_win_logs from win_logs
     # Only works because right now we are sure that win_logs has so few records.
     # In actuality, should block this transaction.
-    #derived_faction_wins = conn.execute(
-    #    select([distinct((
-    #        win_logs_table.c.game_session_id,
-    #        win_logs_table.c.faction_id,
-    #        win_logs_table.c.created_at
-    #    ))])
-    #)
     derived_faction_wins = conn.execute("""
         SELECT DISTINCT(
             win_logs.game_session_id, win_logs.faction_id, win_logs.created_at
