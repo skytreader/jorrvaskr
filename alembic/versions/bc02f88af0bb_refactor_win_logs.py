@@ -20,8 +20,8 @@ depends_on = None
 
 def __parse_distinct_tuple(dt):
     parsed = dt[1:len(dt) - 1].split(",")
-    assert len(parsed) == 3
-    return (int(parsed[0]), int(parsed[1]), parsed[2])
+    assert len(parsed) == 4
+    return (int(parsed[0]), int(parsed[1]), int(parsed[2]), parsed[3])
 
 
 def upgrade():
@@ -35,7 +35,8 @@ def upgrade():
     # In actuality, should block this transaction.
     derived_faction_wins = conn.execute("""
         SELECT DISTINCT(
-            win_logs.game_session_id, win_logs.faction_id, win_logs.created_at
+            win_logs.id, win_logs.game_session_id, win_logs.faction_id,
+            win_logs.created_at
         ) FROM win_logs;
     """)
     faction_win_logs_table = op.create_table(
@@ -67,16 +68,21 @@ def upgrade():
             server_default=sa.func.current_timestamp()
         )
     )
+    player_win_log_fks = []
 
     for faction_win, in derived_faction_wins:
         parsed_faction_win = __parse_distinct_tuple(faction_win)
-        conn.execute(
+        fwl = conn.execute(
             faction_win_logs_table.insert(),
-            game_session_id=parsed_faction_win[0],
-            faction_id=parsed_faction_win[1],
-            created_at=parsed_faction_win[2],
+            game_session_id=parsed_faction_win[1],
+            faction_id=parsed_faction_win[2],
+            created_at=parsed_faction_win[3],
             updated_at=now
         )
+        player_win_log_fks.append({
+            "b_win_log_id": parsed_faction_win[0],
+            "b_faction_win_log_id": fwl.inserted_primary_key
+        })
 
     op.drop_column("win_logs", "game_session_id")
     op.drop_column("win_logs", "faction_id")
@@ -92,6 +98,12 @@ def upgrade():
             ),
             nullable=True
         )
+    )
+    conn.execute(
+        win_logs_table.update()
+        .where(win_logs_table.c.id == bindparam("b_win_log_id"))
+        .values(faction_win_log_id=bindparam("b_faction_win_log_id")),
+        player_win_log_fks
     )
     op.rename_table("win_logs", "player_win_logs")
 
@@ -156,7 +168,8 @@ def downgrade():
                 faction_id=bindparam("b_faction_id"),
                 game_session_id=bindparam("b_game_session_id"),
                 created_at=bindparam("b_created_at")
-            )
+            ),
+            params
         )
 
     op.drop_column("win_logs", "faction_win_log_id")
