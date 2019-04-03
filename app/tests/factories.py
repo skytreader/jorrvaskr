@@ -13,6 +13,7 @@ from app.models import (
 
 import factory
 import random
+import string
 
 
 class GameTypeFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -22,7 +23,7 @@ class GameTypeFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     id = factory.Sequence(lambda n: n)
     label = factory.LazyAttribute(
-        lambda x: random.choice(("One Night", "Ultimate"))
+        lambda x: "".join(random.choice(string.ascii_lowercase) for i in range(8))
     )
 
 class PlayerFactory(factory.alchemy.SQLAlchemyModelFactory):
