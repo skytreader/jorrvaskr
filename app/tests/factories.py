@@ -21,7 +21,7 @@ class GameTypeFactory(factory.alchemy.SQLAlchemyModelFactory):
         model = GameType
         sqlalchemy_session = db.session
 
-    id = factory.Sequence(lambda n: n + 2)
+    id = factory.Sequence(lambda n: n + 3)
     label = factory.LazyAttribute(
         lambda x: "".join(random.choice(string.ascii_lowercase) for i in range(8))
     )
