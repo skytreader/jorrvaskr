@@ -134,8 +134,7 @@ def downgrade():
             sa.Integer,
             sa.ForeignKey(
                 "factions.id", name="winlog_factions_fk3", ondelete="CASCADE"
-            ),
-            nullable=False
+            )
         )
     )
     op.add_column(
@@ -146,8 +145,7 @@ def downgrade():
             sa.ForeignKey(
                 "game_sessions.id", name="winlog_gamesessions_fk2",
                 ondelete="CASCADE"
-            ),
-            nullable=False
+            )
         )
     )
     
@@ -176,7 +174,7 @@ def downgrade():
         }
         conn.execute(
             win_logs_table.update()
-            .where(table.c.faction_win_log_id == bindparam("b_faction_win_id"))
+            .where(win_logs_table.c.faction_win_log_id == bindparam("b_faction_win_id"))
             .values(
                 faction_id=bindparam("b_faction_id"),
                 game_session_id=bindparam("b_game_session_id"),
@@ -186,4 +184,6 @@ def downgrade():
         )
 
     op.drop_column("win_logs", "faction_win_log_id")
+    op.alter_column("win_logs", "faction_id", nullable=False)
+    op.alter_column("win_logs", "game_session_id", nullable=False)
     op.drop_table("faction_win_logs")
