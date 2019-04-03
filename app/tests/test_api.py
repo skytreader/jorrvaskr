@@ -177,7 +177,6 @@ class ApiTests(AppTestCase):
         # Create player
         player = PlayerFactory()
         self.db.session.add(player)
-        self.db.session.flush()
         asc_win_order = ("Villagers", "Lovers", "Werewolves", "Tanner")
 
         for i, faction in enumerate(asc_win_order):
@@ -186,14 +185,12 @@ class ApiTests(AppTestCase):
                 fwl = FactionWinLogFactory(
                     faction=Faction.get_faction_from_name(faction)
                 )
-                self.db.session.add(fwl)
-                self.db.session.flush()
                 pwl = PlayerWinLogFactory(
                     player=player, faction_win_log=fwl
                 )
                 self.db.session.add(pwl)
-                self.db.session.flush()
-
+        
+        self.db.session.flush()
         player_winlog_summary = api.compute_player_winlog_summary(player.id)
         factions_len = len(asc_win_order)
 
