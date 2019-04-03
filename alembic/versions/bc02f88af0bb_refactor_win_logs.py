@@ -69,20 +69,32 @@ def upgrade():
         )
     )
     player_win_log_fks = []
+    # Since we are not adding a unique constraint to the tuple
+    # (game_session_id, faction_id, created_at), this soft rule that has arisen
+    # in the data is just imposed via programming logic.
+    inserted_distinguishing_tuples = {}
 
     for faction_win, in derived_faction_wins:
         parsed_faction_win = __parse_distinct_tuple(faction_win)
-        fwl = conn.execute(
-            faction_win_logs_table.insert(),
-            game_session_id=parsed_faction_win[1],
-            faction_id=parsed_faction_win[2],
-            created_at=parsed_faction_win[3],
-            updated_at=now
-        )
-        player_win_log_fks.append({
-            "b_win_log_id": parsed_faction_win[0],
-            "b_faction_win_log_id": fwl.inserted_primary_key
-        })
+
+        if parsed_faction_win[1:] not in inserted_distinguishing_tuples:
+            fwl = conn.execute(
+                faction_win_logs_table.insert(),
+                game_session_id=parsed_faction_win[1],
+                faction_id=parsed_faction_win[2],
+                created_at=parsed_faction_win[3],
+                updated_at=now
+            )
+            inserted_distinguishing_tuples[parsed_faction_win[1:]] = fwl.inserted_primary_key[0]
+            player_win_log_fks.append({
+                "b_win_log_id": parsed_faction_win[0],
+                "b_faction_win_log_id": fwl.inserted_primary_key[0]
+            })
+        else:
+            player_win_log_fks.append({
+                "b_win_log_id": parsed_faction_win[0],
+                "b_faction_win_log_id": inserted_distinguishing_tuples[parsed_faction_win[1:]]
+            })
 
     op.drop_column("win_logs", "game_session_id")
     op.drop_column("win_logs", "faction_id")
@@ -99,6 +111,7 @@ def upgrade():
             nullable=True
         )
     )
+    win_logs_table = sa.Table("win_logs", sa.MetaData(bind=op.get_bind()), autoload=True)
     conn.execute(
         win_logs_table.update()
         .where(win_logs_table.c.id == bindparam("b_win_log_id"))
@@ -143,7 +156,7 @@ def downgrade():
 
     # This assumes that the tuple (game_session_id, faction_id, created_at) is a
     # unique. While the DB does not enforce this constraint, this actually
-    # reflects the state of the data. If a bunch of super-fact werewolf-playing
+    # reflects the state of the data. If a bunch of super-fast werewolf-playing
     # AI agents were to store stats in Jorrvaskr, this assumption might not hold.
     faction_win_records = conn.execute(
         select([
