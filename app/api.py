@@ -6,6 +6,7 @@ from app.models import (
 )
 
 from datetime import datetime, timedelta
+from sqlalchemy.sql import func
 
 bp = Blueprint("api", __name__)
 
@@ -98,3 +99,15 @@ def edit_winlog():
 
     db.session.commit()
     return "OK", 200
+
+def compute_player_winlog_summary(playerid):
+    return (
+        db.session.query(
+            Faction.name,
+            func.count(PlayerWinLog.game_session_id).label("win_counts")
+        ).filter(PlayerWinLog.player_id == playerid)
+        .filter(PlayerWinLog.faction_id == Faction.id)
+        .group_by(Faction.name)
+        .order_by("win_counts DESC")
+        .all()
+    )

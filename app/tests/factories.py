@@ -6,6 +6,7 @@ from app.models import (
     GameSessionRecord,
     Faction,
     FactionTally,
+    FactionWinLog,
     PlayerWinLog,
     WinWeight
 )
@@ -68,3 +69,19 @@ class FactionTallyFactory(factory.alchemy.SQLAlchemyModelFactory):
     faction = factory.SubFactory(FactionFactory)
     game_session = factory.SubFactory(GameSessionFactory)
     games_won = factory.LazyAttribute(lambda x: random.randint(0, 20))
+
+class FactionWinLogFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = FactionWinLog
+        sqlalchemy_session = db.session
+
+    game_session = factory.SubFactory(GameSessionFactory)
+    faction = factory.SubFactory(FactionFactory)
+
+class PlayerWinLogFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = PlayerWinLog
+        sqlalchemy_session = db.session
+
+    player = factory.SubFactory(PlayerFactory)
+    faction_win_log = factory.SubFactory(FactionWinLogFactory)

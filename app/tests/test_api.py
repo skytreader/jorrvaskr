@@ -172,3 +172,27 @@ class ApiTests(AppTestCase):
 
         for idx, name in enumerate(players):
             self.db.session.add(PlayerFactory(id=idx + 1, name=name))
+
+    def test_compute_player_winlog_summary(self):
+        # Create player
+        player = PlayerFactory()
+        asc_win_order = ("Villagers", "Lovers", "Werewolves", "Tanner")
+
+        for i, faction in enumerate(asc_win_order):
+            win_count = i + 1
+            for j in range(win_count):
+                fwl = FactionWinLogFactory(
+                    faction=Faction.get_faction_from_name(faction)
+                )
+                pwl = PlayerWinLogFactory(
+                    player=player, faction_win_log=fwl
+                )
+                self.db.session.add(pwl)
+
+        self.db.session.flush()
+        player_winlog_summary = api.compute_player_winlog_summary(player.id)
+        factions_len = len(asc_win_order)
+
+        for i, faction in enumerate(reversed(asc_win_order)):
+            self.assertEqual(faction, player_winlog_summary[i][0])
+            self.assertEqual(factions_len - i, player_winlog_summary[i][1])
