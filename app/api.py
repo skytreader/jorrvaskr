@@ -113,3 +113,17 @@ def compute_player_winlog_summary(playerid):
         .order_by(text("win_counts DESC"))
         .all()
     )
+
+def compute_detailed_winlog(playerid):
+    return (
+        db.session.query(
+            PlayerWinLog.id,
+            GameSession.created_at,
+            Faction.name
+        ).filter(PlayerWinLog.faction_win_log_id == FactionWinLog.id)
+        .filter(PlayerWinLog.player_id == playerid)
+        .filter(FactionWinLog.game_session_id == GameSession.id)
+        .filter(FactionWinLog.faction_id == Faction.id)
+        .order_by(GameSession.created_at, PlayerWinLog.id)
+        .all()
+    )

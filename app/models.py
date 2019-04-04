@@ -248,8 +248,7 @@ class FactionWinLog(db.Model):
 class PlayerWinLog(db.Model):
     """
     A slightly more detailed record of wins. One win for one player is one, and
-    only one, row in this table. In addition to that, this will also record the
-    faction of the player and the session in which the win happened.
+    only one, row in this table.
 
     Note that this might not fully coincide with the game session records. This
     is because in our original tracking, such detailed information was not kept.

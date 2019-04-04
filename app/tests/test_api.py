@@ -174,9 +174,7 @@ class ApiTests(AppTestCase):
             self.db.session.add(PlayerFactory(id=idx + 1, name=name))
 
     def test_compute_player_winlog_summary(self):
-        # Create player
         player = PlayerFactory()
-        self.db.session.add(player)
         asc_win_order = ("Villagers", "Lovers", "Werewolves", "Tanner")
 
         for i, faction in enumerate(asc_win_order):
@@ -197,3 +195,27 @@ class ApiTests(AppTestCase):
         for i, faction in enumerate(reversed(asc_win_order)):
             self.assertEqual(faction, player_winlog_summary[i][0])
             self.assertEqual(factions_len - i, player_winlog_summary[i][1])
+
+    def test_compute_detailed_winlog(self):
+        player = PlayerFactory()
+        self.db.session.add(player)
+        self.db.session.flush()
+        log_win_order = ("Tanner", "Tanner", "Werewolves", "Werewolves", "Lovers")
+
+        for faction in log_win_order:
+            fwl = FactionWinLogFactory(
+                faction=Faction.get_faction_from_name(faction)
+            )
+            pwl = PlayerWinLogFactory(
+                player=player, faction_win_log=fwl
+            )
+            self.db.session.add(pwl)
+            # flush here so that we (hopefully??!?!) get some variation in the
+            # created_at field.
+            self.db.session.flush()
+
+        winlogs = api.compute_detailed_winlog(player.id)
+        self.assertEqual(len(log_win_order), len(winlogs))
+
+        for faction, log in zip(log_win_order, winlogs):
+            self.assertEqual(faction, log[3])

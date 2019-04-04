@@ -104,17 +104,6 @@ def view_user_record(playerid):
     ]
 
     context["winlog_summary"] = api.compute_player_winlog_summary(playerid)
-
-    context["detailed_winlog"] = (
-        db.session.query(
-            PlayerWinLog.id,
-            GameSession.created_at,
-            Faction.name
-        ).filter(PlayerWinLog.game_session_id == GameSession.id)
-        .filter(PlayerWinLog.faction_id == Faction.id)
-        .filter(PlayerWinLog.player_id == playerid)
-        .order_by(GameSession.created_at, PlayerWinLog.id)
-        .all()
-    )
+    context["detailed_winlog"] = api.compute_detailed_winlog(playerid)
 
     return render_template("view-user-record.jinja", **context)
