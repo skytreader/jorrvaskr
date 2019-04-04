@@ -105,5 +105,6 @@ def view_user_record(playerid):
 
     context["winlog_summary"] = api.compute_player_winlog_summary(playerid)
     context["detailed_winlog"] = api.compute_detailed_winlog(playerid)
+    context["styles"] = ("view-user-record.css",)
 
     return render_template("view-user-record.jinja", **context)

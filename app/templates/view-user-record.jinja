@@ -51,8 +51,8 @@
           <tr id="winlog-view-{{ record[0] }}">
             <td>{{ record[1] }}</td>
             <td>{{ record[2] }}</td>
-            <td></td>
-            <td>
+            <td class="btn-borders"></td>
+            <td class="btn-borders">
               <input type="button" class="btn" onclick="pc.showEditRecord({{ record[0] }})" value="Edit">
             </td>
           </tr>
@@ -62,10 +62,10 @@
             <td>
               <input type="text" id="wle-{{ record[0] }}" value="{{ record[2] }}">
             </td>
-            <td>
+            <td class="btn-borders">
               <input type="button" class="btn btn-primary" onclick="pc.sendEdit({{ record[0] }})" value="Save">
             </td>
-            <td>
+            <td class="btn-borders">
               <input type="button" class="btn" onclick="pc.cancelEditRecord({{ record[0] }})" value="Cancel">
             </td>
           </tr>

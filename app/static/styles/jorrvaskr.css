@@ -15,6 +15,11 @@ table {
     border: 1px solid #debcbc;
 }
 
+td {
+    border: 1px solid #debcbc;
+    padding: 3px;
+}
+
 .logo-container {
     float: left;
     flex: auto;
