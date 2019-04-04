@@ -83,12 +83,3 @@ You may now run the tests like so:
     docker-compose -f docker-compose-test.yml run web
 
 More info can be found in `.travis.yml`.
-
-### Note
-
-In an attempt to make `docker-compose.yml` and `docker-compose-test.yml` as
-similar as possible, the images used by the services declared use the same
-context. The slight difference between the main web image and the test web image
-means that you need to build with `docker-compose` everytime you either want to
-spin up the web app or run the unit tests. Not yet sure if there is a better way
-to handle this.

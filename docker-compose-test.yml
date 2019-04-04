@@ -1,6 +1,6 @@
 version: '2.1'
 services:
-  db:
+  db_test:
     image: "postgres:11.1-alpine"
     environment:
       - POSTGRES_USER=postgres
@@ -13,6 +13,8 @@ services:
       timeout: 12s
       retries: 4
   web:
+    environment:
+      - JORRVASKR_TESTING=true
     build:
       context: ./
       dockerfile: Dockerfile-test
@@ -21,7 +23,7 @@ services:
     volumes:
       - .:/jorrvaskr
     depends_on:
-      db:
+      db_test:
         condition: service_healthy
 
 volumes:
