@@ -218,4 +218,4 @@ class ApiTests(AppTestCase):
         self.assertEqual(len(log_win_order), len(winlogs))
 
         for faction, log in zip(log_win_order, winlogs):
-            self.assertEqual(faction, log[3])
+            self.assertEqual(faction, log[2])
