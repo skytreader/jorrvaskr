@@ -8,6 +8,13 @@ a {
     color: #f3f2ac;
 }
 
+table {
+    table-layout: auto;
+    width: 30%;
+    border-collapse: collapse;
+    border: 1px solid #debcbc;
+}
+
 .logo-container {
     float: left;
     flex: auto;

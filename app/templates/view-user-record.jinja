@@ -44,6 +44,8 @@
         <tr>
           <th>Session Date</th>
           <th>Faction Name</th>
+          <th></th>
+          <th></th>
         </tr>
         {% for record in detailed_winlog: %}
           <tr id="winlog-view-{{ record[0] }}">
@@ -62,6 +64,8 @@
             </td>
             <td>
               <input type="button" class="btn btn-primary" onclick="pc.sendEdit({{ record[0] }})" value="Save">
+            </td>
+            <td>
               <input type="button" class="btn" onclick="pc.cancelEditRecord({{ record[0] }})" value="Cancel">
             </td>
           </tr>
