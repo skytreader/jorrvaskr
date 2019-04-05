@@ -3,7 +3,7 @@ function gid(s){
 }
 
 function docQuery(q){
-    return document.querySelector(q);
+    return document.querySelectorAll(q);
 }
 
 function newNode(type){

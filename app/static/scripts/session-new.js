@@ -11,7 +11,7 @@ function createPlayerNode(playerName){
     var chkBox = newNode("input");
     chkBox.type = "checkbox";
     chkBox.value = playerName;
-    chkBox.class = "jorrvaskr-player";
+    chkBox.className = "jorrvaskr-player";
     chkBox.checked = true;
 
     var nameDisplay = newNode("span");
@@ -133,7 +133,7 @@ pc.addFaction = function(){
 
 pc.playAgain = function(){
     // Validation first
-    var wonFaction = docQuery("input[name='won-faction']:checked");
+    var wonFaction = docQuery("input[name='won-faction']:checked")[0];
     if (wonFaction == null){
         gid("in-game-prompts").innerHTML = "Please choose which faction won";
         return;
@@ -175,11 +175,11 @@ pc.playAgain = function(){
     queryStringComponents.push(
         "session-date=" + encodeURIComponent(gid("jorrvaskr-session-start-date").value)
     );
-    var gameType = docQuery("input[name='game-type']:checked").value;
+    var gameType = docQuery("input[name='game-type']:checked")[0].value;
     queryStringComponents.push(
         "game-type=" + encodeURIComponent(gameType)
     );
-    var factionWon = encodeURIComponent(docQuery("input[name='won-faction']:checked").value)
+    var factionWon = encodeURIComponent(docQuery("input[name='won-faction']:checked")[0].value)
     queryStringComponents.push("faction=" + factionWon);
 
     var xhr = new XMLHttpRequest();
@@ -209,3 +209,4 @@ pc.getPlayersInGame = function(){
 
     return playersInGame;
 }
+
