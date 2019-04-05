@@ -5,5 +5,5 @@ RUN apt-get update && apt-get -y install netcat
 COPY requirements-test.txt ./
 RUN pip install -r requirements-test.txt
 COPY wait-for-postgres.sh ./
-CMD ["./wait-for-postgres.sh", "db", "pytest", "-v", "/jorrvaskr"]
+CMD ["./wait-for-postgres.sh", "db_test", "pytest", "-v", "/jorrvaskr"]
 ENTRYPOINT ["/usr/bin/env"]
