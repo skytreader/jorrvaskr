@@ -210,3 +210,11 @@ pc.getPlayersInGame = function(){
     return playersInGame;
 }
 
+pc.togglePlayerChecks = function(){
+    var playerCheckboxes = docQuery(".jorrvaskr-player");
+    var allSelector = gid("all-selector");
+    var limit = playerCheckboxes.length;
+    for (var i = 0; i < limit; i++){
+        playerCheckboxes[i].checked = allSelector.checked;
+    }
+}
