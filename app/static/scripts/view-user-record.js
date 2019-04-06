@@ -19,7 +19,7 @@ pc.sendEdit = function(win_log_id){
             "faction=" + encodeURIComponent(faction)
         ]
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/game_record/edit/winlog", true);
+        xhr.open("POST", "/game_record/edit/winlog_old", true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         xhr.send(queryStringComponents.join("&"));
         window.location.reload(true);

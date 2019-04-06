@@ -81,8 +81,8 @@ def new_game_records():
     db.session.commit()
     return "OK"
 
-@bp.route("/game_record/edit/winlog", methods=("POST",))
-def edit_winlog():
+@bp.route("/game_record/edit/winlog_old", methods=("POST",))
+def edit_winlog_old():
     winlog_id = int(request.form.get("id"))
     updated_faction = request.form.get("faction")
 
