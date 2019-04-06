@@ -118,7 +118,7 @@ def compute_detailed_winlog(playerid):
     return (
         db.session.query(
             PlayerWinLog.id,
-            GameSession.created_at,
+            func.to_char(GameSession.created_at, "YYYY-MM-DD"),
             Faction.name
         ).filter(PlayerWinLog.faction_win_log_id == FactionWinLog.id)
         .filter(PlayerWinLog.player_id == playerid)
