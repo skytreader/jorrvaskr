@@ -112,12 +112,13 @@ def upgrade():
         )
     )
     win_logs_table = sa.Table("win_logs", sa.MetaData(bind=op.get_bind()), autoload=True)
-    conn.execute(
-        win_logs_table.update()
-        .where(win_logs_table.c.id == bindparam("b_win_log_id"))
-        .values(faction_win_log_id=bindparam("b_faction_win_log_id")),
-        player_win_log_fks
-    )
+    if player_win_log_fks:
+        conn.execute(
+            win_logs_table.update()
+            .where(win_logs_table.c.id == bindparam("b_win_log_id"))
+            .values(faction_win_log_id=bindparam("b_faction_win_log_id")),
+            player_win_log_fks
+        )
     op.rename_table("win_logs", "player_win_logs")
 
 
