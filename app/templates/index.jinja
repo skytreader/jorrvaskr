@@ -22,18 +22,22 @@
     </div>
   {% endif %}
   {% for game_type in faction_records: %}
-    <h3>{{ game_type }}</h3>
-    {% if faction_records[game_type]: %}
-      <strong>Total played: </strong>{{ total_games_played[game_type] }}
-      <table>
-        <tr><th>Faction</th><th>Games Won</th></tr>
-        {% for record in faction_records[game_type]: %}
-          <tr><td>{{ record[0] }}</td><td>{{ record[1] }}</td></tr>
-        {% endfor %}
-      </table>
-    {% else %}
-      <h4>No games yet :(. Go play some!</h4>
-    {% endif %}
+    <div class="visual-child">
+      <h3>{{ game_type }}</h3>
+      <div class="visual-child">
+        {% if faction_records[game_type]: %}
+          <strong>Total played: </strong>{{ total_games_played[game_type] }}
+          <table>
+            <tr><th>Faction</th><th>Games Won</th></tr>
+            {% for record in faction_records[game_type]: %}
+              <tr><td>{{ record[0] }}</td><td>{{ record[1] }}</td></tr>
+            {% endfor %}
+          </table>
+        {% else %}
+          <h4>No games yet :(. Go play some!</h4>
+        {% endif %}
+      </div>
+    </div>
   {% endfor %}
 </div>
 {% endblock %}
