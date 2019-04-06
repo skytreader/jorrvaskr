@@ -4,77 +4,93 @@
 {% block content %}
 <div class="data-section">
   <h1>{{ player_name | possessive_form }} record</h1>
-  <h2>Summary</h2>
-  {% if played_won: %}
-    <table>
-      <tr>
-        <th>Game Type</th>
-        <th>Played</th>
-        <th>Won</th>
-        <th>Win Ratio</th>
-      </tr>
-      {% for pw_summary in played_won: %}
-        <tr>
-          <td>{{ pw_summary["game_type"] }}</td>
-          <td>{{ pw_summary["played"] }}</td>
-          <td>{{ pw_summary["won"] }}</td>
-          <td>{{ pw_summary["won"] / pw_summary["played"] }}</td>
-      {% endfor %}
-    </table>
-    {# GameSessionRecords won't always map to PlayerWinLogs. So we need to check. #}
-    {% if winlog_summary: %}
-      <h2>Best Factions</h2>
-      <p>{{ player_name }} plays {{ winlog_summary[0][0] }} the best.</p>
-      <table>
-        <tr>
-          <th>Faction Name</th>
-          <th>Times won</th>
-        </tr>
-        {% for faction_tally in winlog_summary: %}
+  <div class="visual-child">
+    <h2>Summary</h2>
+    <div class="visual-child">
+      {% if played_won: %}
+        <table>
           <tr>
-            <td>{{ faction_tally[0] }}</td>
-            <td>{{ faction_tally[1] }}</td>
+            <th>Game Type</th>
+            <th>Played</th>
+            <th>Won</th>
+            <th>Win Ratio</th>
           </tr>
-        {% endfor %}
-      </table>
+          {% for pw_summary in played_won: %}
+            <tr>
+              <td>{{ pw_summary["game_type"] }}</td>
+              <td>{{ pw_summary["played"] }}</td>
+              <td>{{ pw_summary["won"] }}</td>
+              <td>{{ pw_summary["won"] / pw_summary["played"] }}</td>
+          {% endfor %}
+        </table>
+      {% else: %}
+        <h3>No summary available. Play some games maybe?</h3>
+      {% endif %}
+    </div>
+  </div>
+  <div class="visual-child">
+    {# GameSessionRecords won't always map to PlayerWinLogs. So we need to check. #}
+    <h2>Best Factions</h2>
+      <div class="visual-child">
+        {% if winlog_summary: %}
+          <p>{{ player_name }} plays {{ winlog_summary[0][0] }} the best.</p>
+          <table>
+            <tr>
+              <th>Faction Name</th>
+              <th>Times won</th>
+            </tr>
+            {% for faction_tally in winlog_summary: %}
+              <tr>
+                <td>{{ faction_tally[0] }}</td>
+                <td>{{ faction_tally[1] }}</td>
+              </tr>
+            {% endfor %}
+          </table>
+        {% else: %}
+          <h3>You won't have a best faction if you don't play any games!</h3>
+        {% endif %}
+      </div>
+    </div>
 
-      <h2>Record</h2>
-      <div id="records-error-area" style="display: none;"></div>
-      <table>
-        <tr>
-          <th>Session Date</th>
-          <th>Faction Name</th>
-          <th></th>
-          <th></th>
-        </tr>
-        {% for record in detailed_winlog: %}
-          <tr id="winlog-view-{{ record[0] }}">
-            <td>{{ record[1] }}</td>
-            <td>{{ record[2] }}</td>
-            <td class="btn-borders"></td>
-            <td class="btn-borders">
-              <input type="button" class="btn" onclick="pc.showEditRecord({{ record[0] }})" value="Edit">
-            </td>
+    <div class="visual-child">
+      <h2>Win Record</h2>
+      <div class="visual-child">
+        <div id="records-error-area" style="display: none;"></div>
+        {% if not detailed_winlog: %}
+          <h3>Get your winning streak started by playing a game! Go!</h3>
+        {% endif %}
+        <table>
+          <tr>
+            <th>Session Date</th>
+            <th>Faction Name</th>
+            <th></th>
+            <th></th>
           </tr>
-          {# FIXME don't rely on inline styles! #}
-          <tr id="winlog-edit-{{ record[0] }}" style="display: none">
-            <td>{{ record[1] }}</td>
-            <td>
-              <input type="text" id="wle-{{ record[0] }}" value="{{ record[2] }}">
-            </td>
-            <td class="btn-borders">
-              <input type="button" class="btn btn-primary" onclick="pc.sendEdit({{ record[0] }})" value="Save">
-            </td>
-            <td class="btn-borders">
-              <input type="button" class="btn" onclick="pc.cancelEditRecord({{ record[0] }})" value="Cancel">
-            </td>
-          </tr>
-        {% endfor %}
-      </table>
-    {% endif %}
-    <p>
-  {% else: %}
-    <h3>{{ player_name }} has not yet played any games.</h3>
-  {% endif %}
+          {% for record in detailed_winlog: %}
+            <tr id="winlog-view-{{ record[0] }}">
+              <td>{{ record[1] }}</td>
+              <td>{{ record[2] }}</td>
+              <td class="btn-borders"></td>
+              <td class="btn-borders">
+                <input type="button" class="btn" onclick="pc.showEditRecord({{ record[0] }})" value="Edit">
+              </td>
+            </tr>
+            {# FIXME don't rely on inline styles! #}
+            <tr id="winlog-edit-{{ record[0] }}" style="display: none">
+              <td>{{ record[1] }}</td>
+              <td>
+                <input type="text" id="wle-{{ record[0] }}" value="{{ record[2] }}">
+              </td>
+              <td class="btn-borders">
+                <input type="button" class="btn btn-primary" onclick="pc.sendEdit({{ record[0] }})" value="Save">
+              </td>
+              <td class="btn-borders">
+                <input type="button" class="btn" onclick="pc.cancelEditRecord({{ record[0] }})" value="Cancel">
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
 </div>
 {% endblock %}

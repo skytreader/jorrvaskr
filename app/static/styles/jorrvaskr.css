@@ -116,3 +116,7 @@ td {
     flex: 100;
     padding: 20px;
 }
+
+.visual-child {
+    margin-left: 12px;
+}
