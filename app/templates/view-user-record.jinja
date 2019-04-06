@@ -56,40 +56,41 @@
       <h2>Win Record</h2>
       <div class="visual-child">
         <div id="records-error-area" style="display: none;"></div>
-        {% if not detailed_winlog: %}
+        {% if detailed_winlog: %}
+          <table>
+            <tr>
+              <th>Session Date</th>
+              <th>Faction Name</th>
+              <th></th>
+              <th></th>
+            </tr>
+            {% for record in detailed_winlog: %}
+              <tr id="winlog-view-{{ record[0] }}">
+                <td>{{ record[1] }}</td>
+                <td>{{ record[2] }}</td>
+                <td class="btn-borders"></td>
+                <td class="btn-borders">
+                  <input type="button" class="btn" onclick="pc.showEditRecord({{ record[0] }})" value="Edit">
+                </td>
+              </tr>
+              {# FIXME don't rely on inline styles! #}
+              <tr id="winlog-edit-{{ record[0] }}" style="display: none">
+                <td>{{ record[1] }}</td>
+                <td>
+                  <input type="text" id="wle-{{ record[0] }}" value="{{ record[2] }}">
+                </td>
+                <td class="btn-borders">
+                  <input type="button" class="btn btn-primary" onclick="pc.sendEdit({{ record[0] }})" value="Save">
+                </td>
+                <td class="btn-borders">
+                  <input type="button" class="btn" onclick="pc.cancelEditRecord({{ record[0] }})" value="Cancel">
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
+        {% else: %}
           <h3>Get your winning streak started by playing a game! Go!</h3>
         {% endif %}
-        <table>
-          <tr>
-            <th>Session Date</th>
-            <th>Faction Name</th>
-            <th></th>
-            <th></th>
-          </tr>
-          {% for record in detailed_winlog: %}
-            <tr id="winlog-view-{{ record[0] }}">
-              <td>{{ record[1] }}</td>
-              <td>{{ record[2] }}</td>
-              <td class="btn-borders"></td>
-              <td class="btn-borders">
-                <input type="button" class="btn" onclick="pc.showEditRecord({{ record[0] }})" value="Edit">
-              </td>
-            </tr>
-            {# FIXME don't rely on inline styles! #}
-            <tr id="winlog-edit-{{ record[0] }}" style="display: none">
-              <td>{{ record[1] }}</td>
-              <td>
-                <input type="text" id="wle-{{ record[0] }}" value="{{ record[2] }}">
-              </td>
-              <td class="btn-borders">
-                <input type="button" class="btn btn-primary" onclick="pc.sendEdit({{ record[0] }})" value="Save">
-              </td>
-              <td class="btn-borders">
-                <input type="button" class="btn" onclick="pc.cancelEditRecord({{ record[0] }})" value="Cancel">
-              </td>
-            </tr>
-          {% endfor %}
-        </table>
       </div>
     </div>
 </div>
