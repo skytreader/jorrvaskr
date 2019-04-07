@@ -101,6 +101,28 @@ def edit_winlog_old():
     db.session.commit()
     return "OK", 200
 
+@bp.route("/game_record/view/factions/<int:game_session_id>")
+def get_faction_wins_for_session(game_session_id):
+    raw_records = (
+        db.session.query(
+            Faction.name
+        ).filter(FactionWinLog.game_session_id == game_session_id)
+        .filter(FactionWinLog.faction_id == Faction.id)
+        .order_by(FactionWinLog.created_at)
+        .limit(10)
+    )
+    raw_records = [rec[0] for record in raw_records]
+    counts = (
+        db.session.query(
+            Faction.name,
+            func.count(FactionWinLog.id).label("times_won")
+        ).filter(FactionWinLog.game_session_id == game_session_id)
+        .filter(FactionWinLog.faction_id == Faction.id)
+        .order_by(text("times_won DESC"))
+    )
+
+    return flask.json({"log": raw_records, "record_count": counts})
+
 def compute_player_winlog_summary(playerid):
     return (
         db.session.query(
