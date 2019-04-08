@@ -1,5 +1,5 @@
 from . import db
-from datetime import timedelta
+from datetime import datetime, timedelta
 from sqlalchemy import column
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -99,7 +99,7 @@ class GameSession(db.Model):
         """
         Where date is a datetime object.
         """
-        date_limit = date + timedelta(days=1)
+        date_limit = date.date() + timedelta(days=1)
         return (
             db.session.query(GameSession)
             .filter(date <= GameSession.created_at)
