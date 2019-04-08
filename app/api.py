@@ -9,6 +9,8 @@ from datetime import datetime, timedelta
 from sqlalchemy.sql import func
 from sqlalchemy import text
 
+import flask
+
 bp = Blueprint("api", __name__)
 
 @bp.route("/game_record/new", methods=("POST",))
@@ -103,25 +105,34 @@ def edit_winlog_old():
 
 @bp.route("/game_record/view/factions/<int:game_session_id>")
 def get_faction_wins_for_session(game_session_id):
+    """
+    Returns a JSON object with two fields:
+
+    - "log" is a log of the last 10 factions who won, ordered by who last won.
+    - "record_count" is a count of all wins from a faction in this session so
+      far.
+    """
     raw_records = (
         db.session.query(
             Faction.name
         ).filter(FactionWinLog.game_session_id == game_session_id)
         .filter(FactionWinLog.faction_id == Faction.id)
-        .order_by(FactionWinLog.created_at)
+        .order_by(FactionWinLog.created_at.desc(), FactionWinLog.id.desc())
         .limit(10)
     )
-    raw_records = [rec[0] for record in raw_records]
+    raw_records = [record[0] for record in raw_records]
     counts = (
         db.session.query(
             Faction.name,
             func.count(FactionWinLog.id).label("times_won")
         ).filter(FactionWinLog.game_session_id == game_session_id)
         .filter(FactionWinLog.faction_id == Faction.id)
+        .group_by(Faction.name)
         .order_by(text("times_won DESC"))
     )
+    counts = {row[0]: row[1] for row in counts}
 
-    return flask.json({"log": raw_records, "record_count": counts})
+    return flask.jsonify({"log": raw_records, "record_count": counts})
 
 def compute_player_winlog_summary(playerid):
     return (

@@ -7,6 +7,7 @@ from datetime import datetime
 from freezegun import freeze_time
 
 import app.tests.factories as f
+import json
 
 FREEZE_DATE = "2019-01-28"
 
@@ -219,3 +220,47 @@ class ApiTests(AppTestCase):
 
         for faction, log in zip(log_win_order, winlogs):
             self.assertEqual(faction, log[2])
+
+    def test_get_faction_wins_for_session(self):
+        win_counts = {
+            "Werewolves": 6,
+            "Villagers": 4
+        }
+        session_winners = []
+        session_winners.extend(["Werewolves"] * win_counts["Werewolves"])
+        # Villagers have been owning the game lately.
+        session_winners.extend(["Villagers"] * win_counts["Villagers"])
+        game_session = GameSessionFactory()
+        self.db.session.add(game_session)
+        self.db.session.flush()
+        
+        for faction in session_winners:
+            self.db.session.add(
+                FactionWinLogFactory(
+                    faction=Faction.get_faction_from_name(faction),
+                    game_session=game_session
+                )
+            )
+        self.db.session.flush()
+        session_win_record = json.loads(
+            api.get_faction_wins_for_session(game_session.id).data
+        )
+        self.assertEqual(list(reversed(session_winners)), session_win_record["log"])
+        self.assertEqual(win_counts, session_win_record["record_count"])
+
+        # Make sure that the window shifts once more records are added.
+        tanner = Faction.get_faction_from_name("Tanner")
+        win_counts["Tanner"] = 10
+
+        for _ in range(10):
+            self.db.session.add(
+                FactionWinLogFactory(
+                    faction=tanner, game_session=game_session
+                )
+            )
+        self.db.session.flush()
+        session_win_record = json.loads(
+            api.get_faction_wins_for_session(game_session.id).data
+        )
+        self.assertEqual(["Tanner"] * 10, session_win_record["log"])
+        self.assertEqual(win_counts, session_win_record["record_count"])
