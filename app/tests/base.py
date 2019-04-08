@@ -18,7 +18,7 @@ class AppTestCase(TestCase):
         self.app = self.create_app()
         self.db = App.db
         _one_night = GameType(label="One Night")
-        _ultimate = GameType(label="Utimate")
+        _ultimate = GameType(label="Ultimate")
         self.db.session.add(_one_night)
         self.db.session.add(_ultimate)
 
