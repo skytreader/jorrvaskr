@@ -22,16 +22,7 @@ def new_game_records():
     session_date = datetime.fromisoformat(request.form["session-date"])
     game_type = int(request.form["game-type"])
     faction = request.form["faction"]
-    
-    # Find a GameSession, if it exists
-    date_query_limit = session_date + timedelta(days=1)
-    game_session = (
-        db.session.query(GameSession)
-        .filter(session_date <= GameSession.created_at)
-        .filter(GameSession.game_type_id == game_type)
-        .filter(GameSession.created_at < date_query_limit)
-        .first()
-    )
+    game_session = GameSession.find_session(session_date, game_type)
 
     if not game_session:
         # In this sense, `created_at` lies because the date the game was started
