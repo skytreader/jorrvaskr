@@ -8,17 +8,17 @@
     "record_count" is a tally of the number of times any given faction has won
     so far _for the whole game_.
 #}
-{% macro render_game_stats(faction_wins, class_namespace) %}
+{% macro render_game_stats(faction_wins, id_namespace) %}
   {% if faction_wins: %}
     <h3>Game Summary:</h3>
-    <ul class="{{ class_namespace}}-game-summary">
+    <ul id="{{ id_namespace}}-game-summary">
       {% for counts in faction_wins["record_count"]: %}
         <li>{{ counts }} - Won {{ faction_wins["record_count"][counts] }} times.</li>
       {% endfor %}
     </ul>
 
     <h3>Recent trend:</h3>
-    <ol class="{{ class_namespace }}-recent-trend">
+    <ol id="{{ id_namespace }}-recent-trend">
       {% for log in faction_wins["log"]: %}
         <li>{{ log }}</li>
       {% endfor %}

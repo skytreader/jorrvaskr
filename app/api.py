@@ -132,6 +132,11 @@ def get_faction_wins_for_session(game_session_id):
 
     return flask.jsonify({"log": raw_records, "record_count": counts})
 
+@bp.route("/game_session/view/id/<int:game_type_id>")
+def get_game_session_id(game_type_id):
+    session_date = datetime.fromisoformat(request.args["session-date"])
+    return str(GameSession.find_session(session_date, game_type_id).id)
+
 def compute_player_winlog_summary(playerid):
     return (
         db.session.query(

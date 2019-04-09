@@ -1,4 +1,9 @@
 MIN_PLAYERS_REQUIRED = 5;
+SESSION_IDS = {
+    "One Night": null,
+    "Ultimate": null
+}
+
 pc.players = new Set();
 
 pc.onLoad = function(){
@@ -174,20 +179,59 @@ pc.playAgain = function(){
     var factionWon = encodeURIComponent(docQuery("input[name='won-faction']:checked")[0].value)
     queryStringComponents.push("faction=" + factionWon);
 
-    var xhr = new XMLHttpRequest();
-    xhr.addEventListener("load", (e) => {
-        if (xhr.status == 200){
+    var saveRecordAjax = new XMLHttpRequest();
+    saveRecordAjax.addEventListener("load", (e) => {
+        if (saveRecordAjax.status == 200){
             newRecordSuccess(this, factionWon, gameType);
+            this.refreshStatsBoard(gameType);
         } else{
             alert("Something went wrong. Probably dev error. Double check your code, Chad.");
         }
     });
-    xhr.addEventListener("error", (e) => {
+    saveRecordAjax.addEventListener("error", (e) => {
         alert("Something went wrong. Try again.");
     });
-    xhr.open("POST", "/game_record/new", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.send(queryStringComponents.join("&"));
+    saveRecordAjax.open("POST", "/game_record/new", true);
+    saveRecordAjax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    saveRecordAjax.send(queryStringComponents.join("&"));
+}
+
+pc.refreshStatsBoard = function(gameType){
+    var gameTypeLabel = gameType == "1" ? "One Night" : "Ultimate";
+    if (SESSION_IDS[gameTypeLabel] == null){
+        var sessionDate = gid("jorrvaskr-session-start-date").value;
+        var getSessionIdAjax = new XMLHttpRequest();
+        getSessionIdAjax.addEventListener("load", (e) => {
+            if (getSessionIdAjax.status == 200){
+                SESSION_IDS[gameTypeLabel] = getSessionIdAjax.responseText;
+                this.retrieveAndRefreshStats(gameTypeLabel);
+            } else{
+                console.warn("Unable to get the session id. Check backend logs.");
+            }
+        });
+        getSessionIdAjax.addEventListener("error", (e) => {
+            console.warn("Unable to get the session id due to error.");
+        });
+        getSessionIdAjax.open("GET", "/game_session/view/id/" + gameType + "?session-date=" + encodeURIComponent(sessionDate), true);
+        getSessionIdAjax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        getSessionIdAjax.send();
+    } else{
+        this.retrieveAndRefreshStats(gameTypeLabel);
+    }
+}
+
+pc.retrieveAndRefreshStats = function(gameTypeLabel){
+    var refreshStatsBoardAjax = new XMLHttpRequest();
+    refreshStatsBoardAjax.addEventListener("load", (e) => {
+        if (refreshStatsBoardAjax.status == 200){
+            var updatedRecords = JSON.parse(refreshStatsBoardAjax.responseText);
+            this.refreshStatsView(updatedRecords, gameTypeLabel);
+        }
+    });
+    refreshStatsBoardAjax.addEventListener("error", (e) => {
+    });
+    refreshStatsBoardAjax.open("GET", "/game_record/view/factions/" + SESSION_IDS[gameTypeLabel]);
+    refreshStatsBoardAjax.send();
 }
 
 function newRecordSuccess(controller, factionWon, gameType){
@@ -204,6 +248,36 @@ function newRecordSuccess(controller, factionWon, gameType){
     showElements([
         "jorrvaskr-start-prompt", "player-list-screen"
     ])
+}
+
+function createCountStatNode(faction, wincount){
+    var li = newNode("li");
+    li.innerHTML = faction + " - Won " + wincount + " times.";
+    return li;
+}
+
+function createWinLogNode(faction){
+    var li = newNode("li");
+    li.innerHTML = faction;
+    return li;
+}
+
+pc.refreshStatsView = function(factionWins, gameType){
+    var idNamespace = gameType == "One Night" ? "onenight" : "ultimate";
+
+    var gameSummary = gid(idNamespace + "-game-summary");
+    clearChildren(gameSummary);
+    for (var faction in factionWins["record_count"]){
+        var statNode = createCountStatNode(faction, factionWins["record_count"][faction]);
+        gameSummary.appendChild(statNode);
+    }
+
+    var gameTrend = gid(idNamespace + "-recent-trend");
+    clearChildren(gameTrend);
+    var limit = factionWins["log"].length;
+    for (var i = 0; i < limit; i++){
+        gameTrend.appendChild(createWinLogNode(factionWins["log"][i]));
+    }
 }
 
 pc.getPlayersInGame = function(){
