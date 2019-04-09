@@ -1,5 +1,8 @@
 {# vim: set ts=2: #}
+
 {% extends "base.jinja" %}
+{% from "macros.jinja" import render_game_stats %}
+
 {% block title %}New Session{% endblock %}
 {% block content %}
   <div class="data-section">
@@ -77,43 +80,11 @@
       <div class="session-stats">
         <div>
           <h2>Ultimate Werewolf Stats</h2>
-          {% if ultimate_faction_wins: %}
-            <h3>Game Summary:</h3>
-            <ul class="ultimate-game-summary">
-              {% for counts in ultimate_faction_wins["record_count"]: %}
-                <li>{{ counts }} - Won {{ ultimate_faction_wins["record_count"][counts] }} times.</li>
-              {% endfor %}
-            </ul>
-
-            <h3>Recent trend:</h3>
-            <ol class="ultimate-recent-trend">
-              {% for log in ultimate_faction_wins["log"]: %}
-                <li>{{ log }}</li>
-              {% endfor %}
-            </ol>
-          {% else: %}
-            <p>Haven't played Ultimate Werewolf in this session yet.</p>
-          {% endif %}
+          {{ render_game_stats(ultimate_faction_wins, "ultimate") }}
         </div>
         <div>
           <h2>One Night Werewolf Stats</h2>
-          {% if one_night_faction_wins: %}
-            <h3>Game Summary:</h3>
-            <ul class="onenight-game-summary">
-              {% for counts in one_night_faction_wins["record_count"]: %}
-                <li>{{ counts }} - Won {{ one_night_faction_wins["record_count"][counts] }} times.</li>
-              {% endfor %}
-            </ul>
-
-            <h3>Recent trend:</h3>
-            <ol class="onenight-recent-trend">
-              {% for log in one_night_faction_wins["log"]: %}
-                <li>{{ log }}</li>
-              {% endfor %}
-            </ol>
-          {% else: %}
-            <p>Haven't played One Night Werewolf in this session yet.</p>
-          {% endif %}
+          {{ render_game_stats(one_night_faction_wins, "onenight") }}
         </div>
       </div>
     </div>
