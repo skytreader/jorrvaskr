@@ -1,10 +1,13 @@
-from app import api, app, db
+from app import api, db
 from app.models import (
     Faction, FactionTally, GameSession, GameSessionRecord, GameType, Player,
     PlayerWinLog
 )
+from datetime import datetime
 from flask import Blueprint, render_template, request
 from sqlalchemy.sql import func
+
+import json
 
 bp = Blueprint("jorrvaskr", __name__)
 
@@ -46,12 +49,29 @@ def index():
 @bp.route("/session/new", methods=("POST",))
 def session_start():
     factions = db.session.query(Faction).all()
+    session_date = datetime.fromisoformat(request.form["session-start-date"])
+    ultimate_session = GameSession.find_session(
+        session_date, GameType.get_gametype_from_label("Ultimate").id
+    )
+    one_night_session = GameSession.find_session(
+        session_date, GameType.get_gametype_from_label("One Night").id
+    )
+    ultimate_faction_records = (
+        json.loads(api.get_faction_wins_for_session(ultimate_session.id).data)
+        if ultimate_session is not None else None
+    )
+    one_night_faction_records = (
+        json.loads(api.get_faction_wins_for_session(one_night_session.id).data)
+        if one_night_session is not None else None
+    )
     return render_template(
         "session-new.jinja",
         session_date=request.form["session-start-date"],
         scripts=("session-new.js",),
         styles=("custom-fancy.css", "session-new.css"),
-        factions=factions
+        factions=factions,
+        ultimate_faction_wins=ultimate_faction_records,
+        one_night_faction_wins=one_night_faction_records
     )
 
 @bp.route("/records/view")

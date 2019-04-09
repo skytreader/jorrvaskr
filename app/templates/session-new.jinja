@@ -3,7 +3,7 @@
 {% block title %}New Session{% endblock %}
 {% block content %}
   <div class="data-section">
-    <div class="session-form-section">
+    <div class="session-form-section session-settings">
       <strong>Choose Game Type:</strong>
       <label>
         <input type="radio" name="game-type" value="2" checked> Ultimate
@@ -12,7 +12,7 @@
         <input type="radio" name="game-type" value="1"> One Night
       </label>
     </div>
-    <div class="session-form-section">
+    <div class="session-form-section session-settings">
       <div class="add-player">
         <label>
           <strong>Add Player:</strong>
@@ -24,50 +24,96 @@
       </div>
     </div>
     <hr>
-    <div class="session-form-section">
-      <div id="jorrvaskr-start-prompt">
-        <span id="ready-prompt">You need at least 5 players to start a game.</span>
-        <button class="btn btn-primary" onclick="pc.startGame()" id="start-game" disabled>START!</button>
-      </div>
-      <div id="jorrvaskr-stop-prompt" style="display: none">
-        Too much blood? <button class="btn btn-bloody" onclick="pc.stopGame()">STOP!</button>
-      </div>
-      <div id="jorrvaskr-endgame-prompt" style="display: none">
-        Choosing winners... <button class="btn btn-primary" onclick="pc.playAgain()">One more games!</button>
-      </div>
-      <div id="player-list-screen">
-        <h3>Players</h3>
-        <p>Tick the players who will be joining this game.</p>
-        <div id="player-listing">
-          No players yet.
-        </div>
-      </div>
-      <div id="in-game-screen" style="display: none">
-        <h3>Uncheck all losers...</h3>
-        <div>
-          <label>
-            <input type="checkbox" id="all-selector" onchange="pc.togglePlayerChecks()" checked> All
-          </label>
-        </div>
-        <p id="in-game-prompts"></p>
-        <div id="in-game-listing">
-        </div>
-        <h3>...conquered by the faction</h3>
+    <div class="session-display-body">
+      <div class="session-controls">
         <div class="session-form-section">
-          <div style="float: left">
-            <input type="text" placeholder="New Faction" id="jorrvaskr-new-faction">
+          <div id="jorrvaskr-start-prompt">
+            <span id="ready-prompt">You need at least 5 players to start a game.</span>
+            <button class="btn btn-primary" onclick="pc.startGame()" id="start-game" disabled>START!</button>
           </div>
-          <div class="add-button" onclick="pc.addFaction()">+</div>
-        </div>
-        <div id="faction-listing">
-          {% for faction in factions %}
+          <div id="jorrvaskr-stop-prompt" style="display: none">
+            Too much blood? <button class="btn btn-bloody" onclick="pc.stopGame()">STOP!</button>
+          </div>
+          <div id="jorrvaskr-endgame-prompt" style="display: none">
+            Choosing winners... <button class="btn btn-primary" onclick="pc.playAgain()">One more games!</button>
+          </div>
+          <div id="player-list-screen">
+            <h3>Players</h3>
+            <p>Tick the players who will be joining this game.</p>
+            <div id="player-listing">
+              No players yet.
+            </div>
+          </div>
+          <div id="in-game-screen" style="display: none">
+            <h3>Uncheck all losers...</h3>
             <div>
               <label>
-                <input type="radio" name="won-faction" value="{{ faction.name }}">
-                {{ faction.name }}
+                <input type="checkbox" id="all-selector" onchange="pc.togglePlayerChecks()" checked> All
               </label>
             </div>
-          {% endfor %}
+            <p id="in-game-prompts"></p>
+            <div id="in-game-listing">
+            </div>
+            <h3>...conquered by the faction</h3>
+            <div class="session-form-section">
+              <div style="float: left">
+                <input type="text" placeholder="New Faction" id="jorrvaskr-new-faction">
+              </div>
+              <div class="add-button" onclick="pc.addFaction()">+</div>
+            </div>
+            <div id="faction-listing">
+              {% for faction in factions %}
+                <div>
+                  <label>
+                    <input type="radio" name="won-faction" value="{{ faction.name }}">
+                    {{ faction.name }}
+                  </label>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="session-stats">
+        <div>
+          <h2>Ultimate Werewolf Stats</h2>
+          {% if ultimate_faction_wins: %}
+            <h3>Game Summary:</h3>
+            <ul class="ultimate-game-summary">
+              {% for counts in ultimate_faction_wins["record_count"]: %}
+                <li>{{ counts }} - Won {{ ultimate_faction_wins["record_count"][counts] }} times.</li>
+              {% endfor %}
+            </ul>
+
+            <h3>Recent trend:</h3>
+            <ol class="ultimate-recent-trend">
+              {% for log in ultimate_faction_wins["log"]: %}
+                <li>{{ log }}</li>
+              {% endfor %}
+            </ol>
+          {% else: %}
+            <p>Haven't played Ultimate Werewolf in this session yet.</p>
+          {% endif %}
+        </div>
+        <div>
+          <h2>One Night Werewolf Stats</h2>
+          {% if one_night_faction_wins: %}
+            <h3>Game Summary:</h3>
+            <ul class="onenight-game-summary">
+              {% for counts in one_night_faction_wins["record_count"]: %}
+                <li>{{ counts }} - Won {{ one_night_faction_wins["record_count"][counts] }} times.</li>
+              {% endfor %}
+            </ul>
+
+            <h3>Recent trend:</h3>
+            <ol class="onenight-recent-trend">
+              {% for log in one_night_faction_wins["log"]: %}
+                <li>{{ log }}</li>
+              {% endfor %}
+            </ol>
+          {% else: %}
+            <p>Haven't played One Night Werewolf in this session yet.</p>
+          {% endif %}
         </div>
       </div>
     </div>

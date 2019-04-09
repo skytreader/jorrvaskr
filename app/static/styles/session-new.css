@@ -8,5 +8,30 @@ div.add-player {
     width: 100%;
     float: none;
     clear: both;
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
+}
+
+.session-settings {
+    /* Set to important to override .session-form-section. */
+    flex-direction: row !important;
+}
+
+.session-display-body {
+    display: flex;
+    flex-grow: 1;
+}
+
+.session-controls {
+    width: 49.5%;
+    border-right: 1px solid #dadada;
+    padding-right: 0.5%;
+}
+
+.session-stats {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    width: 49.5%;
+    margin-left: 0.5%;
 }

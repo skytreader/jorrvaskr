@@ -13,6 +13,7 @@ db = None
 app = None
 
 def make_app(config):
+    global app
     app = Flask(__name__)
     app.config.from_object(config)
 
