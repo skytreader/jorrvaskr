@@ -76,8 +76,15 @@ def new_game_records():
 
 @bp.route("/game_record/edit/winlog_old", methods=("POST",))
 def edit_winlog_old():
+    app.logger.warn(
+        "/game_record/edit/winlog_old Deprecated API endpoint called. Should not happen.\n" +
+        "This endpoint has wrong logic to begin with. Should only be called in dev."
+    )
     winlog_id = int(request.form.get("id"))
     updated_faction = request.form.get("faction")
+    # Technically, we should get_or_create here but this endpoint is deprecated
+    # either way so meh.
+    new_faction = Faction.get_faction_from_name(updated_faction)
 
     winlog_record = (
         db.session.query(PlayerWinLog)

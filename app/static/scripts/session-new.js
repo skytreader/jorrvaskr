@@ -141,14 +141,6 @@ pc.playAgain = function(){
         gid("in-game-prompts").innerHTML = "";
     }
 
-    // Note that all this toggling might be undone if Tanner wins.
-    hideElements([
-        "jorrvaskr-stop-prompt", "jorrvaskr-endgame-prompt", "in-game-screen"
-    ]);
-    showElements([
-        "jorrvaskr-start-prompt", "player-list-screen"
-    ])
-
     var winningPlayers = [];
     var inGamePlayersListing = gid("in-game-listing");
     var gamePlayersCount = inGamePlayersListing.children.length;
@@ -183,17 +175,35 @@ pc.playAgain = function(){
     queryStringComponents.push("faction=" + factionWon);
 
     var xhr = new XMLHttpRequest();
+    xhr.addEventListener("load", (e) => {
+        if (xhr.status == 200){
+            newRecordSuccess(this, factionWon, gameType);
+        } else{
+            alert("Something went wrong. Probably dev error. Double check your code, Chad.");
+        }
+    });
+    xhr.addEventListener("error", (e) => {
+        alert("Something went wrong. Try again.");
+    });
     xhr.open("POST", "/game_record/new", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    // FIXME handle the outcome of this send
     xhr.send(queryStringComponents.join("&"));
+}
+
+function newRecordSuccess(controller, factionWon, gameType){
     if (factionWon == "Tanner" && gameType != "1"){
         var shouldContinue = confirm("Aw Tanner won. No fun! Continue with the game anyway?");
         if (shouldContinue){
-            this.startGame();
+            controller.startGame();
         }
     }
     clearChildren(gid("in-game-listing"));
+    hideElements([
+        "jorrvaskr-stop-prompt", "jorrvaskr-endgame-prompt", "in-game-screen"
+    ]);
+    showElements([
+        "jorrvaskr-start-prompt", "player-list-screen"
+    ])
 }
 
 pc.getPlayersInGame = function(){
