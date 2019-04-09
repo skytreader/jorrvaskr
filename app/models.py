@@ -103,6 +103,7 @@ class GameSession(db.Model):
         return (
             db.session.query(GameSession)
             .filter(date <= GameSession.created_at)
+            .filter(GameSession.game_type_id == game_type_id)
             .filter(GameSession.created_at < date_limit)
             .order_by(GameSession.created_at)
             .first()
