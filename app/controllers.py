@@ -6,6 +6,7 @@ from app.models import (
 from datetime import datetime
 from flask import Blueprint, render_template, request
 from sqlalchemy.sql import func
+from sqlalchemy import text
 
 import json
 
@@ -24,10 +25,14 @@ def index():
         games = [g[0] for g in games]
         if games:
             records_per_type[gt.label] = (
-                db.session.query(Faction.name, func.sum(FactionTally.games_won))
+                db.session.query(
+                    Faction.name,
+                    func.sum(FactionTally.games_won).label("faction_tallies")
+                )
                 .filter(FactionTally.game_session_id.in_(games))
                 .filter(Faction.id == FactionTally.faction_id)
                 .group_by(Faction.name)
+                .order_by(text("faction_tallies DESC"))
                 .all()
             )
         else:
@@ -79,16 +84,18 @@ def records_view():
     game_types = db.session.query(GameType).all()
     records_per_type = {}
     for gt in game_types:
+        # TODO Limit this
         records_per_type[gt.label] = (
             db.session.query(
                 Player.id,
                 Player.name,
-                func.sum(GameSessionRecord.games_played),
-                func.sum(GameSessionRecord.games_won)
+                func.sum(GameSessionRecord.games_played).label("games_played"),
+                func.sum(GameSessionRecord.games_won).label("games_won")
             ).filter(GameSession.id == GameSessionRecord.game_session_id)
             .filter(GameSession.game_type_id == gt.id)
             .filter(GameSessionRecord.player_id == Player.id)
             .group_by(Player.id, Player.name)
+            .order_by(text("games_played DESC"), text("games_won DESC"))
             .all()
         )
     return render_template("records-view.jinja", records=records_per_type)
@@ -104,7 +111,6 @@ def view_user_record(playerid):
         .scalar()
     )
 
-    # TODO This can be simplified so that we don't need a dictionary anymore.
     played_won_qr = (
         db.session.query(
             GameSession.game_type_id,

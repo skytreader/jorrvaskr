@@ -10,6 +10,7 @@ from sqlalchemy.sql import func
 from sqlalchemy import text
 
 import flask
+import app.limits as limits
 
 bp = Blueprint("api", __name__)
 
@@ -116,7 +117,7 @@ def get_faction_wins_for_session(game_session_id):
         ).filter(FactionWinLog.game_session_id == game_session_id)
         .filter(FactionWinLog.faction_id == Faction.id)
         .order_by(FactionWinLog.created_at.desc(), FactionWinLog.id.desc())
-        .limit(10)
+        .limit(limits.GAME_RECORDS_WINDOW)
     )
     raw_records = [record[0] for record in raw_records]
     counts = (
@@ -125,6 +126,7 @@ def get_faction_wins_for_session(game_session_id):
             func.count(FactionWinLog.id).label("times_won")
         ).filter(FactionWinLog.game_session_id == game_session_id)
         .filter(FactionWinLog.faction_id == Faction.id)
+        .limit(limits.FACTION_TALLY_COUNTS)
         .group_by(Faction.name)
         .order_by(text("times_won DESC"))
     )
@@ -147,6 +149,7 @@ def compute_player_winlog_summary(playerid):
         .filter(FactionWinLog.faction_id == Faction.id)
         .group_by(Faction.name)
         .order_by(text("win_counts DESC"))
+        .limit(limits.FACTION_TALLY_COUNTS)
         .all()
     )
 
@@ -160,6 +163,6 @@ def compute_detailed_winlog(playerid):
         .filter(PlayerWinLog.player_id == playerid)
         .filter(FactionWinLog.game_session_id == GameSession.id)
         .filter(FactionWinLog.faction_id == Faction.id)
-        .order_by(GameSession.created_at, PlayerWinLog.id)
+        .order_by(GameSession.created_at.desc(), PlayerWinLog.id)
         .all()
     )
