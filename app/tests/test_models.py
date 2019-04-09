@@ -6,6 +6,23 @@ import app.tests.factories as f
 
 class ModelsTests(AppTestCase):
 
+    def test_find_session_day(self):
+        ultimate_werewolf = GameType.get_gametype_from_label("Ultimate")
+        self.assertIsNotNone(ultimate_werewolf)
+        actual_day = datetime(2019, 4, 9)
+        self.assertIsNone(
+            GameSession.find_session(actual_day, ultimate_werewolf.id)
+        )
+        game_session = f.GameSessionFactory(
+            created_at=actual_day, game_type=ultimate_werewolf
+        )
+        self.db.session.add(game_session)
+        self.db.session.flush()
+        self.assertEqual(
+            game_session,
+            GameSession.find_session(actual_day, ultimate_werewolf.id)
+        )
+
     def test_find_session_day_edges(self):
         actual_day = datetime(
             2019, 4, 9, hour=0, minute=1
