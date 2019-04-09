@@ -126,9 +126,9 @@ def get_faction_wins_for_session(game_session_id):
             func.count(FactionWinLog.id).label("times_won")
         ).filter(FactionWinLog.game_session_id == game_session_id)
         .filter(FactionWinLog.faction_id == Faction.id)
-        .limit(limits.FACTION_TALLY_COUNTS)
         .group_by(Faction.name)
         .order_by(text("times_won DESC"))
+        .limit(limits.FACTION_TALLY_COUNTS)
     )
     counts = {row[0]: row[1] for row in counts}
 
