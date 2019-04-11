@@ -278,6 +278,12 @@ pc.refreshStatsView = function(factionWins, gameType){
     for (var i = 0; i < limit; i++){
         gameTrend.appendChild(createWinLogNode(factionWins["log"][i]));
     }
+
+    var deletables = docQuery("." + idNamespace + "-render_game_stats_deletable");
+    limit = deletables.length;
+    for(var i = 0; i < limit; i++){
+        deletables[i].remove();
+    }
 }
 
 pc.getPlayersInGame = function(){

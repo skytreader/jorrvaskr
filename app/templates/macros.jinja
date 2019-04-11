@@ -9,21 +9,23 @@
     so far _for the whole game_.
 #}
 {% macro render_game_stats(faction_wins, id_namespace) %}
-  {% if faction_wins: %}
-    <h3>Game Summary:</h3>
-    <ul id="{{ id_namespace}}-game-summary">
-      {% for counts in faction_wins["record_count"]: %}
-        <li>{{ counts }} - Won {{ faction_wins["record_count"][counts] }} times.</li>
-      {% endfor %}
-    </ul>
+  <h3>Game Summary:</h3>
+  <ul id="{{ id_namespace}}-game-summary">
+    {% for counts in faction_wins["record_count"]: %}
+      <li>{{ counts }} - Won {{ faction_wins["record_count"][counts] }} times.</li>
+    {% endfor %}
+  </ul>
+  {% if not faction_wins["record_count"] %}
+    <p class="{{ id_namespace }}-render_game_stats_deletable">Haven't played this game in this session yet.</p>
+  {% endif %}
 
-    <h3>Recent trend:</h3>
-    <ol id="{{ id_namespace }}-recent-trend">
-      {% for log in faction_wins["log"]: %}
-        <li>{{ log }}</li>
-      {% endfor %}
-    </ol>
-  {% else: %}
-    <p>Haven't played this in this session yet.</p>
+  <h3>Recent trend:</h3>
+  <ol id="{{ id_namespace }}-recent-trend">
+    {% for log in faction_wins["log"]: %}
+      <li>{{ log }}</li>
+    {% endfor %}
+  </ol>
+  {% if not faction_wins["log"] %}
+    <p class="{{ id_namespace }}-render_game_stats_deletable">Haven't played this game in this session yet.</p>
   {% endif %}
 {% endmacro %}
