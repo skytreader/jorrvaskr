@@ -12,6 +12,7 @@ pc.onLoad = function(){
 function createPlayerNode(playerName){
     var playerNode = newNode("div");
     var labelNode = newNode("label");
+    labelNode.className = "choice";
 
     var chkBox = newNode("input");
     chkBox.type = "checkbox";

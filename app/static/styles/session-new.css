@@ -3,8 +3,13 @@ div.add-player {
     margin-right: 3px;
 }
 
+label.choice:hover {
+    color: #000;
+    background-color: #dadada;
+}
+
 .session-form-section {
-    margin-bottom: 6px;
+    margin-bottom: 18px;
     width: 100%;
     float: none;
     clear: both;
