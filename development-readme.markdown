@@ -14,6 +14,10 @@ Assuming the containers are running, it is as simple as
 
 ### Reloading database from a dump
 
+> **WARNING:** When you reload a database, ensure that the DB is empty!
+> Needless to say, dumping data on a nonempty database is going to cause
+> problems.
+
 Assuming the dump is created as above.
 
 0. Edit the SQL dump and add the following line at the top:
@@ -22,7 +26,7 @@ Assuming the dump is created as above.
     SET session_replication_role = replica;
     ```
 
-1. Run the containers althought for this whole operation, only the DB would
+1. Run the containers although for this whole operation, only the DB would
 actually matter:
 
     ```
